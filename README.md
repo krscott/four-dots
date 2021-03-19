@@ -1,6 +1,28 @@
-*Looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+# four-dots
+
+An implementation of Connect Four using a Rust-Tauri-Svelte stack.
+
+## Running in Development
+
+Run these commands in separate shells
+```bash
+yarn run dev
+```
+```bash
+yarn tauri dev
+```
+
+## Building
+
+```bash
+yarn build
+```
 
 ---
+
+*Looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+
+*Original Template README:*
 
 # svelte app
 
