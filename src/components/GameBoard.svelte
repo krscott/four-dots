@@ -2,36 +2,39 @@
     import { fly } from "svelte/transition"
     import { quadIn } from 'svelte/easing'
 
-    import { Grid } from "../grid"
+    import { state_store, State } from "../state"
+import { onDestroy } from "svelte";
 
-    export let grid: Grid = new Grid(7, 6)
-    let currentPlayer = 1;
+    let state: State
+
+    const unsubscribe_game_state = state_store.subscribe(s => {
+        state = s
+    })
+    onDestroy(unsubscribe_game_state)
 
     const cell_click_handler = (r: number, c: number) => {
-        if (!grid.is_set(r, c)) {
-            if (grid.drop_in_column(c, currentPlayer)) {
-                currentPlayer = currentPlayer % 2 + 1
-            }
+        if (!state.is_set(r, c)) {
+            state.put_piece_in_column(c)
+            state = state
         }
-        grid = grid
     }
 </script>
 
 <div class="gameboard">
     <div class="gameboard-inner bg-color">
-        {#each grid.rows as row, r}
+        {#each state.rows as row, r}
             <div class="row">
                 {#each row as cell, c}
                     <div
                         class="cell"
-                        class:cursor-pointer={!grid.is_set(r, c)}
+                        class:cursor-pointer={!state.is_set(r, c)}
                         on:click={() => cell_click_handler(r, c)}
                     >
                         {#if cell !== 0}
                             <div
                                 class="piece svg-container"
-                                in:fly="{{y: -400, duration: 300, easing: quadIn}}"
-                                out:fly="{{y: 400, duration: 300, easing: quadIn}}"
+                                in:fly="{{y: -600, duration: 300, easing: quadIn}}"
+                                out:fly="{{y: 600, duration: 300, easing: quadIn}}"
                             >
                                 <svg fill="var(--player{cell}-color)">
                                     <circle cx="50%" cy="50%" r="40%" />
@@ -61,6 +64,7 @@
 <style>
     .gameboard {
         --gameboard-border-width: 1rem;
+        --gameboard-cell-size: 5rem;
 
         display: inline-block;
         position: relative;
@@ -91,8 +95,8 @@
     .cell {
         display: inline-block;
         position: relative;
-        width: 4rem;
-        height: 4rem;
+        width: var(--gameboard-cell-size);
+        height: var(--gameboard-cell-size);
     }
 
     .svg-container {
@@ -103,8 +107,8 @@
 
     svg {
         position: relative;
-        width: 4rem;
-        height: 4rem;
+        width: var(--gameboard-cell-size);
+        height: var(--gameboard-cell-size);
         vertical-align: top;
         z-index: 1;
     }
