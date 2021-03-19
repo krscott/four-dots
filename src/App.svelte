@@ -12,10 +12,12 @@
 </script>
 
 <main>
-	<!-- <h1 class="text-em-color">Four Dots!</h1> -->
+	<h1 class="text-em-color">Four Dots!</h1>
 	<GameBoard />
 	<div>
-		<button class="secondary-button" on:click={reset_board}>Clear</button>
+		<button class="secondary-button emoji-font" on:click={reset_board}>
+			<span>⤵</span>
+		</button>
 	</div>
 </main>
 
@@ -27,6 +29,14 @@
 	}
 
 	button {
-		font-size: x-large;
+		position: relative;
+		width: 3rem;
+		height: 3rem;
+	}
+
+	button span {
+		font-size: xx-large;
+		position: absolute;
+		transform: translate(-50%, calc(-50% - 0.3rem));
 	}
 </style>
