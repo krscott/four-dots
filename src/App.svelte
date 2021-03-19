@@ -1,30 +1,17 @@
 <script>
-
+	import GameBoard from "./components/GameBoard.svelte"
 </script>
 
 <main>
-	<h1>Four Dots!</h1>
-	<p>Welcome!</p>
+	<h1 class="text-em">Four Dots!</h1>
+	<GameBoard />
 </main>
 
 <style>
-	/* main {
+	main {
 		text-align: center;
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
 	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	} */
 </style>
