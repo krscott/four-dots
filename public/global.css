@@ -16,6 +16,10 @@
     color: var(--text-em-color);
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 html,
 body {
     position: relative;

@@ -2,11 +2,19 @@
     import { fly } from "svelte/transition"
     import { quadIn } from 'svelte/easing'
 
-
     import { Grid } from "../grid"
 
-    let grid: Grid = new Grid(7, 6)
+    export let grid: Grid = new Grid(7, 6)
     let currentPlayer = 1;
+
+    const cell_click_handler = (r: number, c: number) => {
+        if (!grid.is_set(r, c)) {
+            if (grid.drop_in_column(c, currentPlayer)) {
+                currentPlayer = currentPlayer % 2 + 1
+            }
+        }
+        grid = grid
+    }
 </script>
 
 <div class="gameboard">
@@ -14,15 +22,11 @@
         {#each grid.rows as row, r}
             <div class="row">
                 {#each row as cell, c}
-                    <div class="cell" on:click={() => {
-                        if (grid.get(r, c) === 0) {
-                            grid.set(r, c, currentPlayer)
-                            currentPlayer = currentPlayer % 2 + 1
-                        } else {
-                            grid.set(r, c, 0)
-                        }
-                        grid = grid
-                    }}>
+                    <div
+                        class="cell"
+                        class:cursor-pointer={!grid.is_set(r, c)}
+                        on:click={() => cell_click_handler(r, c)}
+                    >
                         {#if cell !== 0}
                             <div
                                 class="piece svg-container"
@@ -87,7 +91,6 @@
     .cell {
         display: inline-block;
         position: relative;
-        cursor: pointer;
         width: 4rem;
         height: 4rem;
     }
