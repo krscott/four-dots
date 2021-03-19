@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import GameBoard from "./components/GameBoard.svelte"
 </script>
 
