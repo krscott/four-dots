@@ -4,6 +4,8 @@
     --bg-color: #ff847c;
     --panel-bg-color: #e84a5f;
     --text-em-color: #900c3f;
+    --player1-color: #900c3f;
+    --player2-color: #feceab;
 }
 
 .bg-color {
@@ -12,14 +14,6 @@
 
 .text-em-color {
     color: var(--text-em-color);
-}
-
-.panel-bg-color {
-    background-color: var(--panel-bg-color);
-}
-
-.panel-fill-color {
-    fill: var(--panel-bg-color);
 }
 
 html,
@@ -34,6 +28,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     background-color: var(--bg-color);
