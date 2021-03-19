@@ -3,7 +3,7 @@
 </script>
 
 <main>
-	<h1 class="text-em">Four Dots!</h1>
+	<h1 class="text-em-color">Four Dots!</h1>
 	<GameBoard />
 </main>
 
@@ -11,7 +11,6 @@
 	main {
 		text-align: center;
 		padding: 1em;
-		max-width: 240px;
 		margin: 0 auto;
 	}
 </style>
