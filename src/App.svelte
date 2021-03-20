@@ -2,10 +2,10 @@
 	import GameBoard from "./components/GameBoard.svelte"
 	import PlayerPieces from "./components/PlayerPieces.svelte"
 
-    import { state_store, State } from "./state"
+    import { state } from "./state"
 
 	const reset_board = () => {
-		state_store.update(state => {
+		state.update(state => {
 			state.clear()
 			return state
 		})

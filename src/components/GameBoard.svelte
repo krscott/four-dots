@@ -2,19 +2,11 @@
     import { fly } from "svelte/transition"
     import { quadIn } from "svelte/easing"
 
-    import { state_store, State, Cell } from "../state"
-    import { onDestroy } from "svelte"
-
-    let state: State
-
-    const unsubscribe_game_state = state_store.subscribe(s => {
-        state = s
-    })
-    onDestroy(unsubscribe_game_state)
+    import { state, Cell } from "../state"
 
     const cell_click_handler = (r: number, c: number) => {
-        if (!state.is_set(r, c)) {
-            state_store.update(state => {
+        if (!$state.is_set(r, c)) {
+            state.update(state => {
                 state.put_piece_in_column(c)
                 return state
             })
@@ -24,19 +16,29 @@
 
 <div class="gameboard">
     <div class="gameboard-inner bg-color">
-        {#each [...state.each_row_index()] as r}
+        {#each [...$state.each_row_index()] as r}
             <div class="row">
-                {#each [...state.each_cell_in_row(r)] as cell, c}
+                {#each [...$state.each_cell_in_row(r)] as cell, c}
                     <div
                         class="cell"
-                        class:cursor-pointer={!state.is_set(r, c)}
+                        class:cursor-pointer={!$state.is_set(r, c)}
                         on:click={() => cell_click_handler(r, c)}
                     >
                         {#if cell !== Cell.None}
                             <div
                                 class="piece svg-container"
-                                in:fly="{{y: -600, duration: 300, delay: 100, easing: quadIn}}"
-                                out:fly="{{y: 600, duration: 300, delay: 100 + (state.height() - r - 1)*20, easing: quadIn}}"
+                                in:fly="{{
+                                    y: -600,
+                                    duration: 300,
+                                    delay: 100,
+                                    easing: quadIn
+                                }}"
+                                out:fly="{{
+                                    y: 600,
+                                    duration: 300,
+                                    delay: 100 + ($state.height() - r - 1)*20,
+                                    easing: quadIn
+                                }}"
                             >
                                 <svg fill="var(--player{cell}-color)">
                                     <circle cx="50%" cy="50%" r="40%" />

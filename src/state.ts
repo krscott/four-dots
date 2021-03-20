@@ -114,4 +114,4 @@ export class State {
     }
 }
 
-export const state_store = writable(new State(7, 6))
+export const state = writable(new State(7, 6))

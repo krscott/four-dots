@@ -2,28 +2,19 @@
     import { fly } from "svelte/transition"
     import { quadIn } from "svelte/easing"
 
-    import { state_store, State, Cell } from "../state"
-    import { onDestroy } from "svelte"
+    import { state, Cell } from "../state"
 
     export let player = Cell.Player1
-
-    let state: State
-
-    // const unsubscribe_game_state = state_store.subscribe(s => {
-    //     state = s
-    // })
-    // onDestroy(unsubscribe_game_state)
-
 
 </script>
 
 <div
     class="pieces-stack"
-    class:is-current-player-stack={$state_store.currentPlayer == player}
+    class:is-current-player-stack={$state.currentPlayer == player}
     style="--player-color: var(--player{player}-color)"
 >
     <div class="spacer"></div>
-    {#each Array($state_store.getRemainingPiecesCount(player)) as _, i}
+    {#each Array($state.getRemainingPiecesCount(player)) as _, i}
         <div
             class="piece"
             out:fly="{{y: -600, duration: 200, easing: quadIn}}"
