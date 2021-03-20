@@ -17,7 +17,11 @@
 
 </script>
 
-<div class="pieces-stack" style="--player-color: var(--player{player}-color)">
+<div
+    class="pieces-stack"
+    class:is-current-player-stack={$state_store.currentPlayer == player}
+    style="--player-color: var(--player{player}-color)"
+>
     <div class="spacer"></div>
     {#each Array($state_store.getRemainingPiecesCount(player)) as _, i}
         <div
@@ -45,7 +49,18 @@
         margin-top: 0.2rem;
         border-radius: 0.2rem;
     }
-/*
-    .piece:last-child {
-    } */
+
+    .is-current-player-stack .piece:last-child {
+        animation: next-piece-animation 6s infinite ease-in;
+    }
+
+    @keyframes next-piece-animation {
+        0% {transform: translateY(0);}
+        20% {transform: translateY(0);}
+        38% {transform: translate(0.05rem, -0.4rem) rotate(8deg);}
+        40% {transform: translateY(0);}
+        80% {transform: translateY(0);}
+        98% {transform: translate(-0.05rem, -0.4rem) rotate(-8deg);}
+        100% {transform: translateY(0);}
+    }
 </style>
