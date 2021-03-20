@@ -1,69 +1,80 @@
 import { writable } from "svelte/store"
 
+export enum Cell {
+    None,
+    Player1,
+    Player2,
+}
+
 export class State {
-    rows: number[][]
-    currentPlayer: number
+    #cells: Cell[]
+    #width: number
+    #height: number
 
-    constructor(w: number, h: number) {
-        const rows = new Array(h)
-        for (let i = 0; i < h; ++i) {
-            rows[i] = new Array(w)
-        }
+    currentPlayer: Cell
 
-        this.rows = rows
-        this.clear()
+    constructor(width: number, height: number) {
+        const cells = new Array(height * width).fill(Cell.None)
 
-        this.currentPlayer = 1;
+        this.#cells = cells
+        this.#width = width
+        this.#height = height
+        this.currentPlayer = Cell.Player1;
     }
 
     clear() {
-        let w = this.width()
-        let h = this.height()
-
-        for (let i = 0; i < h; ++i) {
-            for (let j = 0; j < w; ++j) {
-                this.rows[i][j] = 0
-            }
-        }
+        this.#cells.fill(Cell.None)
     }
 
     width(): number {
-        if (this.rows.length == 0) {
-            return 0;
-        } else {
-            return this.rows[0].length
-        }
+        return this.#width
     }
 
     height(): number {
-        return this.rows.length
+        return this.#height
     }
 
-    is_valid_coord(row: number, column: number): boolean {
+    isValidCoord(row: number, column: number): boolean {
         return (
             row >= 0 &&
-            row < this.rows.length &&
+            row < this.#height &&
             column >= 0 &&
-            column < this.rows[row].length
+            column < this.#width
         )
     }
 
-    get(row: number, column: number): number {
-        if (this.is_valid_coord(row, column)) {
-            return this.rows[row][column]
+    coordToIndex(row: number, column: number): number {
+        return row * this.#width + column
+    }
+
+    get(row: number, column: number): Cell {
+        if (this.isValidCoord(row, column)) {
+            return this.#cells[this.coordToIndex(row, column)]
         } else {
-            return 0
+            return Cell.None
         }
     }
 
-    set(row: number, column: number, value: number) {
-        if (this.is_valid_coord(row, column)) {
-            this.rows[row][column] = value
+    set(row: number, column: number, value: Cell) {
+        if (this.isValidCoord(row, column)) {
+            this.#cells[this.coordToIndex(row, column)] = value
         }
     }
 
     is_set(row: number, column: number): boolean {
-        return this.get(row, column) !== 0
+        return this.get(row, column) !== Cell.None
+    }
+
+    * each_row_index() {
+        for (let r = 0; r < this.#height; ++r) {
+            yield r
+        }
+    }
+
+    * each_cell_in_row(row: number) {
+        for (let c = 0; c < this.#width; ++c) {
+            yield this.#cells[this.coordToIndex(row, c)]
+        }
     }
 
     put_piece_in_column(column: number): boolean {
@@ -74,7 +85,7 @@ export class State {
         for (let r = this.height() - 1; r >= 0; --r) {
             if (!this.is_set(r, column)) {
                 this.set(r, column, this.currentPlayer)
-                this.skip_turn()
+                this.advanceTurn()
                 return true
             }
         }
@@ -82,8 +93,24 @@ export class State {
         return false
     }
 
-    skip_turn() {
-        this.currentPlayer = this.currentPlayer % 2 + 1
+    advanceTurn() {
+        switch (this.currentPlayer) {
+            case Cell.Player1:
+                this.currentPlayer = Cell.Player2
+                break
+            default:
+                this.currentPlayer = Cell.Player1
+        }
+    }
+
+    getRemainingPiecesCount(player: Cell): number {
+        let emptyCellsCount = this.#cells.filter(cell => cell === Cell.None).length
+
+        if (player === this.currentPlayer) {
+            return Math.ceil(emptyCellsCount / 2)
+        } else {
+            return Math.floor(emptyCellsCount / 2)
+        }
     }
 }
 

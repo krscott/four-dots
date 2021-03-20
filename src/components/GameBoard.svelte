@@ -1,9 +1,9 @@
 <script lang="ts">
     import { fly } from "svelte/transition"
-    import { quadIn } from 'svelte/easing'
+    import { quadIn } from "svelte/easing"
 
-    import { state_store, State } from "../state"
-import { onDestroy } from "svelte";
+    import { state_store, State, Cell } from "../state"
+    import { onDestroy } from "svelte"
 
     let state: State
 
@@ -14,27 +14,29 @@ import { onDestroy } from "svelte";
 
     const cell_click_handler = (r: number, c: number) => {
         if (!state.is_set(r, c)) {
-            state.put_piece_in_column(c)
-            state = state
+            state_store.update(state => {
+                state.put_piece_in_column(c)
+                return state
+            })
         }
     }
 </script>
 
 <div class="gameboard">
     <div class="gameboard-inner bg-color">
-        {#each state.rows as row, r}
+        {#each [...state.each_row_index()] as r}
             <div class="row">
-                {#each row as cell, c}
+                {#each [...state.each_cell_in_row(r)] as cell, c}
                     <div
                         class="cell"
                         class:cursor-pointer={!state.is_set(r, c)}
                         on:click={() => cell_click_handler(r, c)}
                     >
-                        {#if cell !== 0}
+                        {#if cell !== Cell.None}
                             <div
                                 class="piece svg-container"
-                                in:fly="{{y: -600, duration: 300, easing: quadIn}}"
-                                out:fly="{{y: 600, duration: 300, easing: quadIn}}"
+                                in:fly="{{y: -600, duration: 300, delay: 100, easing: quadIn}}"
+                                out:fly="{{y: 600, duration: 300, delay: 100 + (state.height() - r - 1)*20, easing: quadIn}}"
                             >
                                 <svg fill="var(--player{cell}-color)">
                                     <circle cx="50%" cy="50%" r="40%" />
@@ -64,7 +66,7 @@ import { onDestroy } from "svelte";
 <style>
     .gameboard {
         --gameboard-border-width: 1rem;
-        --gameboard-cell-size: 5rem;
+        --gameboard-cell-size: 4.7rem;
 
         display: inline-block;
         position: relative;

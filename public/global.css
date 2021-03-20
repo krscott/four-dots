@@ -79,7 +79,9 @@ body {
 }
 
 body {
-    float: left; /* Prevent margin collapse */
+    /* Prevent margin collapse */
+    float: left;
+
     margin: 0;
     padding: 0;
     box-sizing: border-box;
