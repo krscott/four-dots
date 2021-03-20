@@ -42,16 +42,15 @@
     }
 
     .is-current-player-stack .piece:last-child {
-        animation: next-piece-animation 6s infinite ease-in;
+        animation:
+            hover-animation 10s infinite ease-in-out;
     }
 
-    @keyframes next-piece-animation {
+    @keyframes hover-animation {
         0% {transform: translateY(0);}
-        20% {transform: translateY(0);}
-        38% {transform: translate(0.05rem, -0.4rem) rotate(8deg);}
-        40% {transform: translateY(0);}
-        80% {transform: translateY(0);}
-        98% {transform: translate(-0.05rem, -0.4rem) rotate(-8deg);}
+        30% {transform: translateY(-1rem);}
+        50% {transform: translateY(-0.3rem);}
+        70% {transform: translateY(-1rem);}
         100% {transform: translateY(0);}
     }
 </style>
