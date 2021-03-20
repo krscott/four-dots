@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { listen, emit } from "tauri/api/event"
+	import { invoke } from "tauri/api/tauri"
+
 	import GameBoard from "./components/GameBoard.svelte"
 	import PlayerPieces from "./components/PlayerPieces.svelte"
-
     import { state } from "./state"
 
 	const reset_board = () => {
@@ -10,6 +12,11 @@
 			return state
 		})
 	}
+
+	invoke({
+		cmd: "myCustomCommand",
+		argument: "Hello from Svelte!",
+	})
 </script>
 
 <main>

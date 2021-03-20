@@ -3,3 +3,4 @@
 /public/index.tauri.html
 
 .DS_Store
+yarn-error.log
