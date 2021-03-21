@@ -164,7 +164,7 @@ impl State {
 
     fn find_winning_segment(&self) -> Option<(Player, Vec<(i32, i32)>)> {
         for r0 in 0..self.height {
-            for c0 in 0..self.height {
+            for c0 in 0..self.width {
                 for (dr, dc) in &[(0, 1), (1, 1), (1, 0), (1, -1)] {
                     match self.check_if_segment_is_win(r0, c0, *dr, *dc) {
                         Some(seg) => return Some(seg),
