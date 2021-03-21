@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invoke } from "tauri/api/tauri"
     import { fly } from "svelte/transition"
     import { quadIn } from "svelte/easing"
 
@@ -6,9 +7,9 @@
 
     const cell_click_handler = (r: number, c: number) => {
         if (!$state.is_set(r, c)) {
-            state.update(state => {
-                state.put_piece_in_column(c)
-                return state
+            invoke({
+                cmd: "putPieceInColumn",
+                column: c,
             })
         }
     }
@@ -36,7 +37,7 @@
                                 out:fly="{{
                                     y: 600,
                                     duration: 300,
-                                    delay: 100 + ($state.height() - r - 1)*20,
+                                    delay: 100 + ($state.height - r - 1)*20,
                                     easing: quadIn
                                 }}"
                             >

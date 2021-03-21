@@ -1,22 +1,27 @@
 <script lang="ts">
-	import { listen, emit } from "tauri/api/event"
+
 	import { invoke } from "tauri/api/tauri"
 
 	import GameBoard from "./components/GameBoard.svelte"
 	import PlayerPieces from "./components/PlayerPieces.svelte"
-    import { state } from "./state"
+    import { State, state } from "./state"
 
 	const reset_board = () => {
-		state.update(state => {
-			state.clear()
-			return state
+		invoke({
+			cmd: "clearBoard",
 		})
 	}
 
-	invoke({
-		cmd: "myCustomCommand",
-		argument: "Hello from Svelte!",
-	})
+	;(window as any).rust_error_handler = (err: any) => {
+		console.error(err)
+	}
+
+	;(window as any).rust_set_state = (new_state: State) => {
+		state.update(state => {
+			Object.assign(state, new_state)
+			return state
+		})
+	}
 </script>
 
 <main>

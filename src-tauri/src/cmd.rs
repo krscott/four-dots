@@ -1,10 +1,25 @@
 use serde::Deserialize;
 
+use crate::state::State;
+
 #[derive(Deserialize)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
-    // your custom commands
-    // multiple arguments are allowed
-    // note that rename_all = "camelCase": you need to use "myCustomCommand" on JS
-    MyCustomCommand { argument: String },
+    PutPieceInColumn { column: i32 },
+    ClearBoard,
+}
+
+impl Cmd {
+    pub fn handle(&self, state: &mut State) -> anyhow::Result<()> {
+        match self {
+            Cmd::PutPieceInColumn { column } => {
+                state.put_piece_in_column(*column)?;
+            }
+            Cmd::ClearBoard => {
+                state.clear();
+            }
+        }
+
+        Ok(())
+    }
 }

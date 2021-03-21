@@ -6,24 +6,46 @@
 mod cmd;
 mod state;
 
+use tauri::{execute_promise, Webview};
+
+use cmd::Cmd;
+use state::State;
+
 fn main() {
+    let mut state = State::new(7, 6).unwrap();
+
+    let setup_state = state.clone();
+
     tauri::AppBuilder::new()
-        .invoke_handler(|_webview, arg| {
-            use cmd::Cmd::*;
-            match serde_json::from_str(arg) {
+        .setup(move |webview, source| {
+            println!("Source: {}", source);
+            update_webview_state(webview, &setup_state);
+        })
+        .invoke_handler(move |webview, arg| {
+            println!("{}", arg);
+
+            match serde_json::from_str::<'_, Cmd>(arg) {
                 Err(e) => Err(e.to_string()),
-                Ok(command) => {
-                    match command {
-                        // definitions for your custom commands from Cmd here
-                        MyCustomCommand { argument } => {
-                            //  your command code
-                            println!("{}", argument);
-                        }
+                Ok(command) => match command.handle(&mut state) {
+                    Ok(()) => {
+                        update_webview_state(webview, &state);
+                        Ok(())
                     }
-                    Ok(())
-                }
+                    Err(e) => Err(e.to_string()),
+                },
             }
         })
         .build()
         .run();
+}
+
+fn update_webview_state(webview: &mut Webview, state: &State) {
+    let state = state.clone();
+
+    execute_promise(
+        webview,
+        move || Ok(state),
+        "rust_set_state".into(),
+        "rust_error_handler".into(),
+    );
 }
