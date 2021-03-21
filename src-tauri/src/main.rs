@@ -26,13 +26,15 @@ fn main() {
 
             match serde_json::from_str::<'_, Cmd>(arg) {
                 Err(e) => Err(e.to_string()),
-                Ok(command) => match command.handle(&mut state) {
-                    Ok(()) => {
-                        update_webview_state(webview, &state);
-                        Ok(())
+                Ok(command) => {
+                    let res = command.handle(&mut state);
+                    update_webview_state(webview, &state);
+
+                    match res {
+                        Ok(()) => Ok(()),
+                        Err(e) => Err(e.to_string()),
                     }
-                    Err(e) => Err(e.to_string()),
-                },
+                }
             }
         })
         .build()

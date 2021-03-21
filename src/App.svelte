@@ -4,6 +4,7 @@
 
 	import GameBoard from "./components/GameBoard.svelte"
 	import PlayerPieces from "./components/PlayerPieces.svelte"
+import PlayerScore from "./components/PlayerScore.svelte";
     import { State, state } from "./state"
 
 	const reset_board = () => {
@@ -30,16 +31,22 @@
 		<div class="gameboard-container">
 			<GameBoard />
 		</div>
-		<div class="player1">
+		<div class="player1-pieces">
 			<PlayerPieces player={1}/>
 		</div>
-		<div class="player2">
+		<div class="player2-pieces">
 			<PlayerPieces player={2}/>
 		</div>
-		<div class="controls">
+		<div class="footer">
+			<div class="player1-score">
+				<PlayerScore player={1} />
+			</div>
 			<button class="secondary-button emoji-font" on:click={reset_board}>
 				<span>⤵</span>
 			</button>
+			<div class="player2-score">
+				<PlayerScore player={2} />
+			</div>
 		</div>
 	</div>
 </main>
@@ -57,7 +64,7 @@
 		grid-template-rows: auto 1fr;
 		grid-template-areas:
 			"player1 gameboard player2"
-			"controls controls controls";
+			"footer footer footer";
 
  		gap: 1em;
 	}
@@ -66,16 +73,29 @@
 		grid-area: gameboard;
 	}
 
-	.player1 {
+	.player1-pieces {
 		grid-area: player1;
 	}
 
-	.player2 {
+	.player2-pieces {
 		grid-area: player2;
 	}
 
-	.controls {
-		grid-area: controls;
+	.footer {
+		grid-area: footer;
+		display: flex;
+	}
+
+	.footer > * {
+		margin: auto;
+	}
+
+	.player1-score {
+		/* margin-left: 5rem; */
+	}
+
+	.player2-score {
+		/* margin-right: 5rem; */
 	}
 
 	button {

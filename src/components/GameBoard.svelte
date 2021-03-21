@@ -3,7 +3,7 @@
     import { fly } from "svelte/transition"
     import { quadIn } from "svelte/easing"
 
-    import { state, Cell } from "../state"
+    import { state, MaybePlayer } from "../state"
 
     const cell_click_handler = (r: number, c: number) => {
         if (!$state.is_set(r, c)) {
@@ -25,7 +25,7 @@
                         class:cursor-pointer={!$state.is_set(r, c)}
                         on:click={() => cell_click_handler(r, c)}
                     >
-                        {#if cell !== Cell.None}
+                        {#if cell !== MaybePlayer.None}
                             <div
                                 class="piece svg-container"
                                 in:fly="{{

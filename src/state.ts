@@ -1,28 +1,36 @@
 import { writable } from "svelte/store"
 
-export enum Cell {
-    None,
-    Player1,
-    Player2,
+export enum MaybePlayer {
+    None = 0,
+    Player1 = 1,
+    Player2 = 2,
+}
+
+export enum Player {
+    Player1 = 1,
+    Player2 = 2,
 }
 
 export class State {
-    cells: Cell[]
+    cells: MaybePlayer[]
     width: number
     height: number
-    currentPlayer: Cell
+    currentPlayer: Player
+    winningSegment: [Player, [number, number][]] | null
+    player1Score: number
+    player2Score: number
 
     constructor(width: number, height: number) {
-        const cells = new Array(height * width).fill(Cell.None)
+        const cells = new Array(height * width).fill(MaybePlayer.None)
 
         this.cells = cells
         this.width = width
         this.height = height
-        this.currentPlayer = Cell.Player1;
+        this.currentPlayer = Player.Player1;
     }
 
     clear() {
-        this.cells.fill(Cell.None)
+        this.cells.fill(MaybePlayer.None)
     }
 
     isValidCoord(row: number, column: number): boolean {
@@ -38,16 +46,16 @@ export class State {
         return row * this.width + column
     }
 
-    get(row: number, column: number): Cell {
+    get(row: number, column: number): MaybePlayer {
         if (this.isValidCoord(row, column)) {
             return this.cells[this.coordToIndex(row, column)]
         } else {
-            return Cell.None
+            return MaybePlayer.None
         }
     }
 
     is_set(row: number, column: number): boolean {
-        return this.get(row, column) !== Cell.None
+        return this.get(row, column) !== MaybePlayer.None
     }
 
     * each_row_index() {
@@ -62,8 +70,8 @@ export class State {
         }
     }
 
-    getRemainingPiecesCount(player: Cell): number {
-        let emptyCellsCount = this.cells.filter(cell => cell === Cell.None).length
+    getRemainingPiecesCount(player: Player): number {
+        let emptyCellsCount = this.cells.filter(cell => cell === MaybePlayer.None).length
 
         if (player === this.currentPlayer) {
             return Math.ceil(emptyCellsCount / 2)

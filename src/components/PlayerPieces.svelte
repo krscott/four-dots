@@ -2,9 +2,9 @@
     import { fly } from "svelte/transition"
     import { quadIn } from "svelte/easing"
 
-    import { state, Cell } from "../state"
+    import { state, MaybePlayer } from "../state"
 
-    export let player = Cell.Player1
+    export let player = MaybePlayer.Player1
 
 </script>
 
