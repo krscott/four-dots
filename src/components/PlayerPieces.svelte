@@ -6,10 +6,13 @@
 
     export let player = Player.Player1
 
+    $: isGameOver = !!$state.winningSegment
+
 </script>
 
 <div
     class="pieces-stack"
+    class:game-over={isGameOver}
     class:is-current-player-stack={$state.currentPlayer == player}
     style="--player-color: var(--player{player}-color)"
 >
@@ -41,16 +44,13 @@
         border-radius: 0.2rem;
     }
 
-    .is-current-player-stack .piece:last-child {
+    :not(.game-over).is-current-player-stack .piece:last-child {
         animation:
             hover-animation 10s infinite ease-in-out;
     }
 
     @keyframes hover-animation {
-        0% {transform: translateY(0);}
-        30% {transform: translateY(-1rem);}
+        30%,70% {transform: translateY(-1rem);}
         50% {transform: translateY(-0.3rem);}
-        70% {transform: translateY(-1rem);}
-        100% {transform: translateY(0);}
     }
 </style>
