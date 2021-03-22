@@ -1,11 +1,14 @@
 <script lang="ts">
-    export let viewWidth: number;
-    export let viewHeight: number;
+    export let viewWidth: number
+    export let viewHeight: number
+    export let scaleFractionRes: number = 16
 
     let windowWidth: number;
     let windowHeight: number;
 
-    $: scale = Math.min(windowWidth / viewWidth, windowHeight / viewHeight)
+    // `scaleFractionRes` alleviates issue with animation "ghosting"
+    // To see what I mean, remove Math.floor and scaleFractionRes and make the window full screen
+    $: scale = Math.floor(Math.min(windowWidth / viewWidth, windowHeight / viewHeight) * scaleFractionRes) / scaleFractionRes
 
     $: offsetX = Math.round((windowWidth - viewWidth * scale) / 2)
     $: offsetY = Math.round((windowHeight - viewHeight * scale) / 2)
