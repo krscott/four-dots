@@ -26,7 +26,10 @@ export class State {
         this.cells = cells
         this.width = width
         this.height = height
-        this.currentPlayer = Player.Player1;
+        this.currentPlayer = Player.Player1
+        this.winningSegment = null
+        this.player1Score = 0
+        this.player2Score = 0
     }
 
     clear() {

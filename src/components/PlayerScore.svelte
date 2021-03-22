@@ -12,7 +12,7 @@
     )
 
     $: isWinningPlayer = (
-        $state.winningSegment &&
+        !!$state.winningSegment &&
         $state.winningSegment[0] == player
     )
 
