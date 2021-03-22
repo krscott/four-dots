@@ -14,6 +14,7 @@
     --button-secondary-bg-hover-color: #e84a5f;
     --button-secondary-bg-active-color: #fc9d9d;
     --button-secondary-text-color: #ffffff;
+    --win-glow-color: #99b898;
 }
 
 .bg-color {
@@ -95,4 +96,24 @@ body {
 .emoji-font {
     font-family: Symbola, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+svg.glow {
+    animation: glow-fill 2s ease-in-out infinite;
+}
+
+:not(svg).glow {
+    animation: glow-bg 2s ease-in-out infinite;
+}
+
+@keyframes glow-fill {
+    50% {
+        fill: var(--win-glow-color);
+    }
+}
+
+@keyframes glow-bg {
+    50% {
+        background-color: var(--win-glow-color);
+    }
 }

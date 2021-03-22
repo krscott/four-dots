@@ -10,12 +10,21 @@
         ? $state.player1Score
         : $state.player2Score
     )
+
+    $: isWinningPlayer = (
+        $state.winningSegment &&
+        $state.winningSegment[0] == player
+    )
+
 </script>
 
 <div class="container" class:reversed={player == Player.Player2}>
-    {#each Array(playerScore) as _}
+    {#each Array(playerScore) as _, i}
         <span class="emoji-font" in:fade>
-            <Star fill="var(--player{player}-color)"/>
+            <Star
+                fill="var(--player{player}-color)"
+				glow={isWinningPlayer && i == playerScore - 1}
+            />
         </span>
     {/each}
 </div>

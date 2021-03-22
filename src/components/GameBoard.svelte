@@ -13,6 +13,21 @@
             })
         }
     }
+
+    const is_in_winning_segment = (r: number, c: number): boolean => {
+        if (!$state.winningSegment) {
+            return false;
+        }
+
+        for (let [wr, wc] of $state.winningSegment[1]) {
+            if (r == wr && c == wc) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 </script>
 
 <div class="gameboard">
@@ -41,7 +56,10 @@
                                     easing: quadIn
                                 }}"
                             >
-                                <svg fill="var(--player{cell}-color)">
+                                <svg
+                                    class:glow={is_in_winning_segment(r, c)}
+                                    fill="var(--player{cell}-color)"
+                                >
                                     <circle cx="50%" cy="50%" r="40%" />
                                 </svg>
                             </div>
@@ -125,4 +143,5 @@
     .piece {
         position: absolute;
     }
+
 </style>

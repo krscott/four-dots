@@ -45,7 +45,10 @@
 			<div class="player1-score">
 				<PlayerScore player={1} />
 			</div>
-			<button class="eject secondary-button emoji-font" on:click={reset_board}>
+			<button
+				class="eject secondary-button emoji-font"
+				on:click={reset_board}
+			>
 				<span>⤵</span>
 			</button>
 			<div class="player2-score">

@@ -15,7 +15,7 @@ fn main() {
     let mut state = State::new(7, 6).unwrap();
 
     tauri::AppBuilder::new()
-        .setup(move |webview, source| {
+        .setup(move |_webview, source| {
             println!("Source: {}", source);
         })
         .invoke_handler(move |webview, arg| {
