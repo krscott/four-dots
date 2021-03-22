@@ -21,7 +21,7 @@ export class State {
     player2Score: number
 
     constructor(width: number, height: number) {
-        const cells = new Array(height * width).fill(MaybePlayer.None)
+        const cells = new Array<MaybePlayer>(height * width).fill(MaybePlayer.None)
 
         this.cells = cells
         this.width = width
@@ -32,7 +32,7 @@ export class State {
         this.player2Score = 0
     }
 
-    clear() {
+    clear(): void {
         this.cells.fill(MaybePlayer.None)
     }
 
@@ -61,20 +61,20 @@ export class State {
         return this.get(row, column) !== MaybePlayer.None
     }
 
-    * each_row_index() {
+    * each_row_index(): IterableIterator<number> {
         for (let r = 0; r < this.height; ++r) {
             yield r
         }
     }
 
-    * each_cell_in_row(row: number) {
+    * each_cell_in_row(row: number): IterableIterator<number> {
         for (let c = 0; c < this.width; ++c) {
             yield this.cells[this.coordToIndex(row, c)]
         }
     }
 
     getRemainingPiecesCount(player: Player): number {
-        let emptyCellsCount = this.cells.filter(cell => cell === MaybePlayer.None).length
+        const emptyCellsCount = this.cells.filter(cell => cell === MaybePlayer.None).length
 
         if (player === this.currentPlayer) {
             return Math.ceil(emptyCellsCount / 2)

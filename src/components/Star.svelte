@@ -1,6 +1,6 @@
 <script lang="ts">
-    export let fill: string;
-    export let glow: boolean;
+    export let fill: string
+    export let glow: boolean
 </script>
 
 <!-- https://iconmonstr.com/star-3-svg/ -->

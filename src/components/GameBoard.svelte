@@ -1,32 +1,39 @@
 <script lang="ts">
-	import { invoke } from "tauri/api/tauri"
-    import { fly } from "svelte/transition"
-    import { quadIn } from "svelte/easing"
+/* eslint-disable
+    @typescript-eslint/no-unsafe-member-access,
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-assignment */
 
-    import { state, MaybePlayer } from "../state"
+import { invoke } from "tauri/api/tauri"
+import { fly } from "svelte/transition"
+import { quadIn } from "svelte/easing"
 
-    const cell_click_handler = (r: number, c: number) => {
-        if (!$state.is_set(r, c)) {
-            invoke({
-                cmd: "putPieceInColumn",
-                column: c,
-            })
+import { state, MaybePlayer } from "../state"
+
+$: isGameOver = !!$state.winningSegment
+
+const cell_click_handler = (r: number, c: number) => {
+    if (!$state.is_set(r, c)) {
+        invoke({
+            cmd: "putPieceInColumn",
+            column: c,
+        })
+    }
+}
+
+const is_in_winning_segment = (r: number, c: number): boolean => {
+    if (!$state.winningSegment) {
+        return false
+    }
+
+    for (let [wr, wc] of $state.winningSegment[1]) {
+        if (r == wr && c == wc) {
+            return true
         }
     }
 
-    const is_in_winning_segment = (r: number, c: number): boolean => {
-        if (!$state.winningSegment) {
-            return false;
-        }
-
-        for (let [wr, wc] of $state.winningSegment[1]) {
-            if (r == wr && c == wc) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    return false
+}
 
 </script>
 
@@ -37,7 +44,7 @@
                 {#each [...$state.each_cell_in_row(r)] as cell, c}
                     <div
                         class="cell"
-                        class:cursor-pointer={!$state.is_set(r, c)}
+                        class:cursor-pointer={!isGameOver && !$state.is_set(r, c)}
                         on:click={() => cell_click_handler(r, c)}
                     >
                         {#if cell !== MaybePlayer.None}
@@ -66,11 +73,11 @@
                         {/if}
                         <div class="svg-container">
                             <svg class="mask">
-                                <mask id="cutout">
+                                <mask id="cutout-{r}-{c}">
                                     <rect width="100%" height="100%" fill="white"></rect>
                                     <circle cx="50%" cy="50%" r="40%" fill="black"/>
                                 </mask>
-                                <rect width="100%" height="100%" mask="url(#cutout)"></rect>
+                                <rect width="100%" height="100%" mask="url(#cutout-{r}-{c})"></rect>
                             </svg>
                         </div>
                     </div>

@@ -1,10 +1,10 @@
 <script lang="ts">
     export let viewWidth: number
     export let viewHeight: number
-    export let scaleFractionRes: number = 16
+    export let scaleFractionRes = 16
 
-    let windowWidth: number;
-    let windowHeight: number;
+    let windowWidth: number
+    let windowHeight: number
 
     // `scaleFractionRes` alleviates issue with animation "ghosting"
     // To see what I mean, remove Math.floor and scaleFractionRes and make the window full screen

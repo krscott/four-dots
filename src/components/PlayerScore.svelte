@@ -1,20 +1,23 @@
 <script lang="ts">
-    import { fade } from "svelte/transition"
 
-    import { Player, state } from "../state"
-    import Star from "./Star.svelte"
+import { fade } from "svelte/transition"
 
-    export let player: Player = Player.Player1
+import { Player, state } from "../state"
+import Star from "./Star.svelte"
 
-    $: playerScore = (player == Player.Player1
-        ? $state.player1Score
-        : $state.player2Score
-    )
+export let player: Player = Player.Player1
 
-    $: isWinningPlayer = (
-        !!$state.winningSegment &&
-        $state.winningSegment[0] == player
-    )
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+$: playerScore = (player == Player.Player1
+    ? $state.player1Score
+    : $state.player2Score
+)
+
+$: isWinningPlayer = (
+    !!$state.winningSegment &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    $state.winningSegment[0] == player
+)
 
 </script>
 

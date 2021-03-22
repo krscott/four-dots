@@ -1,19 +1,22 @@
+
 <script lang="ts">
-    import { fly } from "svelte/transition"
-    import { quadIn } from "svelte/easing"
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 
-    import { state, Player } from "../state"
+import { fly } from "svelte/transition"
+import { quadIn } from "svelte/easing"
 
-    export let player = Player.Player1
+import { state, Player } from "../state"
 
-    $: isGameOver = !!$state.winningSegment
+export let player = Player.Player1
+
+let isGameOver = false
+$: isGameOver = !!$state.winningSegment
 
 </script>
 
 <div
     class="pieces-stack"
-    class:game-over={isGameOver}
-    class:is-current-player-stack={$state.currentPlayer == player}
+    class:animate-stack={!isGameOver && $state.currentPlayer == player}
     style="--player-color: var(--player{player}-color)"
 >
     <div class="spacer"></div>
@@ -44,7 +47,7 @@
         border-radius: 0.2rem;
     }
 
-    :not(.game-over).is-current-player-stack .piece:last-child {
+    .animate-stack .piece:last-child {
         animation:
             hover-animation 10s infinite ease-in-out;
     }

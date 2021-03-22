@@ -1,130 +1,118 @@
 <script lang="ts">
 
-	import { invoke } from "tauri/api/tauri"
+import { invoke } from "tauri/api/tauri"
 
-	import GameBoard from "./components/GameBoard.svelte"
-	import PlayerPieces from "./components/PlayerPieces.svelte"
-	import PlayerScore from "./components/PlayerScore.svelte"
-	import FitToScreen from "./components/FitToScreen.svelte"
-    import { State, state } from "./state"
+import GameBoard from "./components/GameBoard.svelte"
+import PlayerPieces from "./components/PlayerPieces.svelte"
+import PlayerScore from "./components/PlayerScore.svelte"
+import FitToScreen from "./components/FitToScreen.svelte"
 
-	const windowBaseWidth = 800;
-	const windowBaseHeight = 600;
+const windowBaseWidth = 800
+const windowBaseHeight = 600
 
-	invoke({
-		cmd: "nop",
-	})
+invoke({
+    cmd: "nop",
+})
 
-	const reset_board = () => {
-		invoke({
-			cmd: "clearBoard",
-		})
-	}
+const reset_board = () => {
+    invoke({
+        cmd: "clearBoard",
+    })
+}
 
-	;(window as any).rust_error_handler = (err: any) => {
-		console.error(err)
-	}
-
-	;(window as any).rust_set_state = (new_state: State) => {
-		state.update(state => {
-			Object.assign(state, new_state)
-			return state
-		})
-	}
 </script>
 
 
 <FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
-	<div class="grid">
-		<!-- <h1 class="text-em-color">Four Dots!</h1> -->
-		<div class="gameboard-container">
-			<GameBoard />
-		</div>
-		<div class="player1-pieces">
-			<PlayerPieces player={1}/>
-		</div>
-		<div class="player2-pieces">
-			<PlayerPieces player={2}/>
-		</div>
-		<div class="footer">
-			<div class="player1-score">
-				<PlayerScore player={1} />
-			</div>
-			<button
-				class="eject secondary-button emoji-font"
-				on:click={reset_board}
-			>
-				<span>⤵</span>
-			</button>
-			<div class="player2-score">
-				<PlayerScore player={2} />
-			</div>
-		</div>
-	</div>
+    <div class="grid">
+        <div class="gameboard-container">
+            <GameBoard />
+        </div>
+        <div class="player1-pieces">
+            <PlayerPieces player={1}/>
+        </div>
+        <div class="player2-pieces">
+            <PlayerPieces player={2}/>
+        </div>
+        <div class="footer">
+            <div class="player1-score">
+                <PlayerScore player={1} />
+            </div>
+            <button
+                class="eject secondary-button emoji-font"
+                on:click={reset_board}
+            >
+                <span>⤵</span>
+            </button>
+            <div class="player2-score">
+                <PlayerScore player={2} />
+            </div>
+        </div>
+    </div>
 </FitToScreen>
 
 <style>
 
-	.grid {
-		text-align: center;
-		padding: 1em;
+    .grid {
+        text-align: center;
+        padding: 1em;
 
-		display: grid;
-		grid-template-columns: 1fr auto 1fr;
-		grid-template-rows: auto 1fr;
-		grid-template-areas:
-			"player1 gameboard player2"
-			". footer .";
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "player1 gameboard player2"
+            ". footer .";
 
- 		gap: 1em;
-	}
+         gap: 1em;
+    }
 
-	.gameboard-container {
-		grid-area: gameboard;
-	}
+    .gameboard-container {
+        grid-area: gameboard;
+    }
 
-	.player1-pieces {
-		grid-area: player1;
-	}
+    .player1-pieces {
+        grid-area: player1;
+    }
 
-	.player2-pieces {
-		grid-area: player2;
-	}
+    .player2-pieces {
+        grid-area: player2;
+    }
 
-	.footer {
-		grid-area: footer;
+    .footer {
+        grid-area: footer;
 
-		display: grid;
-		grid-template-columns: 1fr auto 1fr;
-		grid-template-areas:
-			"player1 eject player2";
-	}
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        grid-template-areas:
+            "player1 eject player2";
+    }
 
-	.player1-score {
-		grid-area: player1;
-		margin: auto;
-		margin-left: 0;
-	}
+    .player1-score {
+        grid-area: player1;
+        margin: auto;
+        margin-left: 0;
+    }
 
-	.eject {
-		grid-area: eject;
-	}
+    .eject {
+        grid-area: eject;
+    }
 
-	.player2-score {
-		grid-area: player2;
-		margin: auto;
-		margin-right: 0;
-	}
+    .player2-score {
+        grid-area: player2;
+        margin: auto;
+        margin-right: 0;
+    }
 
-	button {
-		position: relative;
-		width: 3rem;
-		height: 3rem;
-	}
+    button {
+        position: relative;
+        width: 3rem;
+        height: 3rem;
+    }
 
-	button.emoji-font span {
-		font-size: xx-large;
-		position: absolute;
-		transform: translate(-50%, calc(-50% - 0.3rem));
-	}
+    button.emoji-font span {
+        font-size: xx-large;
+        position: absolute;
+        transform: translate(-50%, calc(-50% - 0.3rem));
+    }
 </style>
