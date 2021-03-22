@@ -14,12 +14,9 @@ use state::State;
 fn main() {
     let mut state = State::new(7, 6).unwrap();
 
-    let setup_state = state.clone();
-
     tauri::AppBuilder::new()
         .setup(move |webview, source| {
             println!("Source: {}", source);
-            update_webview_state(webview, &setup_state);
         })
         .invoke_handler(move |webview, arg| {
             println!("{}", arg);

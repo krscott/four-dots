@@ -14,7 +14,7 @@
 
 <div class="container" class:reversed={player == Player.Player2}>
     {#each Array(playerScore) as _}
-        <span class="emoji-font" transition:fade>
+        <span class="emoji-font" in:fade>
             <Star fill="var(--player{player}-color)"/>
         </span>
     {/each}

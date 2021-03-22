@@ -41,6 +41,7 @@ fn validate_state(state: &State) -> Result<(), ValidationError> {
 #[serde(rename_all = "camelCase")]
 #[validate(schema(function = "validate_state"))]
 pub struct State {
+    tick: usize,
     #[validate(length(min = 1))]
     cells: Vec<MaybePlayer>,
     #[validate(range(min = 1))]
@@ -60,6 +61,7 @@ impl State {
         let size = (width * height) as usize;
 
         Ok(Self {
+            tick: 0,
             cells: vec![MaybePlayer::None; size],
             width,
             height,
@@ -210,5 +212,9 @@ impl State {
         println!("{:?}", segment);
 
         Some(segment)
+    }
+
+    pub fn step_tick(&mut self) {
+        self.tick += 1;
     }
 }

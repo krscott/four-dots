@@ -7,6 +7,10 @@
 	import PlayerScore from "./components/PlayerScore.svelte";
     import { State, state } from "./state"
 
+	invoke({
+		cmd: "nop",
+	})
+
 	const reset_board = () => {
 		invoke({
 			cmd: "clearBoard",
