@@ -4,8 +4,12 @@
 
 	import GameBoard from "./components/GameBoard.svelte"
 	import PlayerPieces from "./components/PlayerPieces.svelte"
-	import PlayerScore from "./components/PlayerScore.svelte";
+	import PlayerScore from "./components/PlayerScore.svelte"
+	import FitToScreen from "./components/FitToScreen.svelte"
     import { State, state } from "./state"
+
+	const windowBaseWidth = 800;
+	const windowBaseHeight = 600;
 
 	invoke({
 		cmd: "nop",
@@ -29,7 +33,8 @@
 	}
 </script>
 
-<main>
+
+<FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
 	<div class="grid">
 		<!-- <h1 class="text-em-color">Four Dots!</h1> -->
 		<div class="gameboard-container">
@@ -56,16 +61,14 @@
 			</div>
 		</div>
 	</div>
-</main>
+</FitToScreen>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		/* margin: 0 auto; */
-	}
 
 	.grid {
+		text-align: center;
+		padding: 1em;
+
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
 		grid-template-rows: auto 1fr;

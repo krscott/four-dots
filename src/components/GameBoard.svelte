@@ -144,4 +144,9 @@
         position: absolute;
     }
 
+    .gameboard-inner, .cell {
+        /* Fix scale rounding issue */
+        margin: -1px;
+    }
+
 </style>
