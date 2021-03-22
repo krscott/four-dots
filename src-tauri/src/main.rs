@@ -4,20 +4,18 @@
 )]
 
 mod cmd;
-mod state;
+mod game_board_state;
 
 use tauri::{execute_promise, Webview};
 
 use cmd::Cmd;
-use state::State;
+use game_board_state::GameBoardState;
 
 fn main() {
-    let mut state = State::new(7, 6).unwrap();
+    let mut state = GameBoardState::new(7, 6).unwrap();
 
     tauri::AppBuilder::new()
-        .setup(move |_webview, source| {
-            println!("Source: {}", source);
-        })
+        // .setup(move |_webview, _source| {})
         .invoke_handler(move |webview, arg| {
             println!("{}", arg);
 
@@ -38,7 +36,7 @@ fn main() {
         .run();
 }
 
-fn update_webview_state(webview: &mut Webview, state: &State) {
+fn update_webview_state(webview: &mut Webview, state: &GameBoardState) {
     let state = state.clone();
 
     execute_promise(

@@ -11,7 +11,7 @@ export enum Player {
     Player2 = 2,
 }
 
-export class State {
+export class GameBoardState {
     cells: MaybePlayer[]
     width: number
     height: number
@@ -84,4 +84,4 @@ export class State {
     }
 }
 
-export const state = writable(new State(7, 6))
+export const gameBoardState = writable(new GameBoardState(7, 6))

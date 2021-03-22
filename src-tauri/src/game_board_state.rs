@@ -27,7 +27,7 @@ impl From<Player> for MaybePlayer {
     }
 }
 
-fn validate_state(state: &State) -> Result<(), ValidationError> {
+fn validate_state(state: &GameBoardState) -> Result<(), ValidationError> {
     if state.cells.len() as i32 != state.width + state.height {
         Err(ValidationError::new(
             "cells_length_does_not_match_width_height",
@@ -40,7 +40,7 @@ fn validate_state(state: &State) -> Result<(), ValidationError> {
 #[derive(Debug, Clone, Validate, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[validate(schema(function = "validate_state"))]
-pub struct State {
+pub struct GameBoardState {
     tick: usize,
     #[validate(length(min = 1))]
     cells: Vec<MaybePlayer>,
@@ -54,7 +54,7 @@ pub struct State {
     player2_score: u16,
 }
 
-impl State {
+impl GameBoardState {
     pub fn new(width: i32, height: i32) -> anyhow::Result<Self> {
         Self::check_width_height(width, height)?;
 

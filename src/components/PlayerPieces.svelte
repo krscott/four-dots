@@ -5,22 +5,22 @@
 import { fly } from "svelte/transition"
 import { quadIn } from "svelte/easing"
 
-import { state, Player } from "../state"
+import { gameBoardState, Player } from "../gameBoardState"
 
 export let player = Player.Player1
 
 let isGameOver = false
-$: isGameOver = !!$state.winningSegment
+$: isGameOver = !!$gameBoardState.winningSegment
 
 </script>
 
 <div
     class="pieces-stack"
-    class:animate-stack={!isGameOver && $state.currentPlayer == player}
+    class:animate-stack={!isGameOver && $gameBoardState.currentPlayer == player}
     style="--player-color: var(--player{player}-color)"
 >
     <div class="spacer"></div>
-    {#each Array($state.getRemainingPiecesCount(player)) as _, i}
+    {#each Array($gameBoardState.getRemainingPiecesCount(player)) as _, i}
         <div
             class="piece"
             out:fly="{{y: -600, duration: 200, easing: quadIn}}"

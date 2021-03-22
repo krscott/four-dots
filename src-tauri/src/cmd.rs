@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::state::State;
+use crate::game_board_state::GameBoardState;
 
 #[derive(Deserialize)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
@@ -11,7 +11,7 @@ pub enum Cmd {
 }
 
 impl Cmd {
-    pub fn handle(&self, state: &mut State) -> anyhow::Result<()> {
+    pub fn handle(&self, state: &mut GameBoardState) -> anyhow::Result<()> {
         state.step_tick();
 
         match self {

@@ -13,7 +13,8 @@
     "validate": "svelte-check",
     "lint:js": "eslint src --ext .js,.ts,.svelte",
     "lint:rust": "cd src-tauri && cargo check",
-    "lint": "run-p lint:js validate lint:rust"
+    "lint": "run-p lint:js validate lint:rust",
+    "doc": "cd src-tauri && cargo doc --open"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
