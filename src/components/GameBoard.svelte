@@ -13,7 +13,7 @@ import { state, MaybePlayer } from "../state"
 $: isGameOver = !!$state.winningSegment
 
 const cell_click_handler = (r: number, c: number) => {
-    if (!$state.is_set(r, c)) {
+    if (!isGameOver && !$state.isSet(r, c)) {
         invoke({
             cmd: "putPieceInColumn",
             column: c,
@@ -39,12 +39,12 @@ const is_in_winning_segment = (r: number, c: number): boolean => {
 
 <div class="gameboard">
     <div class="gameboard-inner bg-color">
-        {#each [...$state.each_row_index()] as r}
+        {#each [...$state.eachRowIndex()] as r}
             <div class="row">
-                {#each [...$state.each_cell_in_row(r)] as cell, c}
+                {#each [...$state.eachCellInRow(r)] as cell, c}
                     <div
                         class="cell"
-                        class:cursor-pointer={!isGameOver && !$state.is_set(r, c)}
+                        class:cursor-pointer={!isGameOver && !$state.isSet(r, c)}
                         on:click={() => cell_click_handler(r, c)}
                     >
                         {#if cell !== MaybePlayer.None}

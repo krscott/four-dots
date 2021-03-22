@@ -57,17 +57,17 @@ export class State {
         }
     }
 
-    is_set(row: number, column: number): boolean {
+    isSet(row: number, column: number): boolean {
         return this.get(row, column) !== MaybePlayer.None
     }
 
-    * each_row_index(): IterableIterator<number> {
+    * eachRowIndex(): IterableIterator<number> {
         for (let r = 0; r < this.height; ++r) {
             yield r
         }
     }
 
-    * each_cell_in_row(row: number): IterableIterator<number> {
+    * eachCellInRow(row: number): IterableIterator<number> {
         for (let c = 0; c < this.width; ++c) {
             yield this.cells[this.coordToIndex(row, c)]
         }
