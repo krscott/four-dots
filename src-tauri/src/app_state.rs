@@ -11,6 +11,7 @@ pub enum AppState {
 
 impl Default for AppState {
     fn default() -> Self {
-        AppState::Game(GameBoardState::new(7, 6).unwrap())
+        AppState::Title
+        // AppState::Game(GameBoardState::new(7, 6).unwrap())
     }
 }

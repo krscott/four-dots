@@ -3,9 +3,7 @@ use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use validator::{Validate, ValidationError};
 
-#[derive(
-    Debug, Copy, Clone, PartialEq, Eq, Serialize_repr, Deserialize_repr,
-)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
 #[repr(u8)]
 pub enum MaybePlayer {
     None = 0,
@@ -54,6 +52,12 @@ pub struct GameBoardState {
     winning_segment: Option<(Player, Vec<(i32, i32)>)>,
     player1_score: u16,
     player2_score: u16,
+}
+
+impl Default for GameBoardState {
+    fn default() -> Self {
+        GameBoardState::new(7, 6).unwrap()
+    }
 }
 
 impl GameBoardState {

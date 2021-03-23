@@ -6,7 +6,7 @@ import GameBoard from "./components/GameBoard.svelte"
 import PlayerPieces from "./components/PlayerPieces.svelte"
 import PlayerScore from "./components/PlayerScore.svelte"
 import FitToScreen from "./components/FitToScreen.svelte"
-import { appState } from "./appState"
+import { appState, TitleState } from "./appState"
 import { GameBoardState } from "./gameBoardState"
 
 const windowBaseWidth = 800
@@ -22,10 +22,22 @@ const reset_board = () => {
     })
 }
 
+const startGame = () => {
+    invoke({
+        cmd: "startGame"
+    })
+}
+
 </script>
 
 
 <FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
+    {#if $appState.state instanceof TitleState}
+        <div class="title">
+            <h1>Four Dots</h1>
+            <button on:click={startGame}>🧍‍♂️🧍‍♂️</button>
+        </div>
+    {/if}
     {#if $appState.state instanceof GameBoardState}
         <div class="grid">
             <div class="gameboard-container">
@@ -56,6 +68,10 @@ const reset_board = () => {
 </FitToScreen>
 
 <style>
+
+    .title {
+        text-align: center;
+    }
 
     .grid {
         text-align: center;
