@@ -1,26 +1,23 @@
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import { fly } from "svelte/transition"
 import { quadIn } from "svelte/easing"
 
-import { gameBoardState, Player } from "../gameBoardState"
+import { GameBoardState, Player } from "../gameBoardState"
 
 export let player = Player.Player1
-
-let isGameOver = false
-$: isGameOver = !!$gameBoardState.winningSegment
+export let gameBoardState: GameBoardState
 
 </script>
 
 <div
     class="pieces-stack"
-    class:animate-stack={!isGameOver && $gameBoardState.currentPlayer == player}
+    class:animate-stack={gameBoardState.winningSegment.isNone() && gameBoardState.currentPlayer == player}
     style="--player-color: var(--player{player}-color)"
 >
     <div class="spacer"></div>
-    {#each Array($gameBoardState.getRemainingPiecesCount(player)) as _, i}
+    {#each Array(gameBoardState.getRemainingPiecesCount(player)) as _, i}
         <div
             class="piece"
             out:fly="{{y: -600, duration: 200, easing: quadIn}}"

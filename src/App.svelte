@@ -6,6 +6,8 @@ import GameBoard from "./components/GameBoard.svelte"
 import PlayerPieces from "./components/PlayerPieces.svelte"
 import PlayerScore from "./components/PlayerScore.svelte"
 import FitToScreen from "./components/FitToScreen.svelte"
+import { appState } from "./appState"
+import { GameBoardState } from "./gameBoardState"
 
 const windowBaseWidth = 800
 const windowBaseHeight = 600
@@ -24,31 +26,33 @@ const reset_board = () => {
 
 
 <FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
-    <div class="grid">
-        <div class="gameboard-container">
-            <GameBoard />
-        </div>
-        <div class="player1-pieces">
-            <PlayerPieces player={1}/>
-        </div>
-        <div class="player2-pieces">
-            <PlayerPieces player={2}/>
-        </div>
-        <div class="footer">
-            <div class="player1-score">
-                <PlayerScore player={1} />
+    {#if $appState.state instanceof GameBoardState}
+        <div class="grid">
+            <div class="gameboard-container">
+                <GameBoard gameBoardState={$appState.state} />
             </div>
-            <button
-                class="eject secondary-button emoji-font"
-                on:click={reset_board}
-            >
-                <span>⤵</span>
-            </button>
-            <div class="player2-score">
-                <PlayerScore player={2} />
+            <div class="player1-pieces">
+                <PlayerPieces player={1} gameBoardState={$appState.state}/>
+            </div>
+            <div class="player2-pieces">
+                <PlayerPieces player={2} gameBoardState={$appState.state}/>
+            </div>
+            <div class="footer">
+                <div class="player1-score">
+                    <PlayerScore player={1} gameBoardState={$appState.state} />
+                </div>
+                <button
+                    class="eject secondary-button emoji-font"
+                    on:click={reset_board}
+                >
+                    <span>⤵</span>
+                </button>
+                <div class="player2-score">
+                    <PlayerScore player={2} gameBoardState={$appState.state} />
+                </div>
             </div>
         </div>
-    </div>
+    {/if}
 </FitToScreen>
 
 <style>

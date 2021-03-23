@@ -2,22 +2,18 @@
 
 import { fade } from "svelte/transition"
 
-import { Player, gameBoardState } from "../gameBoardState"
+import { GameBoardState, Player } from "../gameBoardState"
 import Star from "./Star.svelte"
 
 export let player: Player = Player.Player1
+export let gameBoardState: GameBoardState
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 $: playerScore = (player == Player.Player1
-    ? $gameBoardState.player1Score
-    : $gameBoardState.player2Score
+    ? gameBoardState.player1Score
+    : gameBoardState.player2Score
 )
 
-$: isWinningPlayer = (
-    !!$gameBoardState.winningSegment &&
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    $gameBoardState.winningSegment[0] == player
-)
+$: isWinningPlayer = gameBoardState.winningSegment.map(ws => ws[0] == player).unwrapOr(false)
 
 </script>
 

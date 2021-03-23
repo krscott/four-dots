@@ -45,6 +45,13 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@hqoss/monads@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@hqoss/monads/-/monads-0.4.0.tgz#6732920b2390362993e336c6d8a05f0c52dac994"
+  integrity sha512-TmNqu05uy6Du40fHuiJddlomb3NREx6h0AK/Wy+cu6TiTnyTUbD1sK7KhmAiJ/XEes8fP+QDAVJIoD0J4QTC4g==
+  dependencies:
+    tslib "^2.0.0"
+
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz"

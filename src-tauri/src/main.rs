@@ -3,16 +3,18 @@
     windows_subsystem = "windows"
 )]
 
+mod app_state;
 mod cmd;
 mod game_board_state;
 
 use tauri::{execute_promise, Webview};
 
+use app_state::AppState;
 use cmd::Cmd;
-use game_board_state::GameBoardState;
 
 fn main() {
-    let mut state = GameBoardState::new(7, 6).unwrap();
+    // let mut state = GameBoardState::new(7, 6).unwrap();
+    let mut state = AppState::default();
 
     tauri::AppBuilder::new()
         // .setup(move |_webview, _source| {})
@@ -36,7 +38,7 @@ fn main() {
         .run();
 }
 
-fn update_webview_state(webview: &mut Webview, state: &GameBoardState) {
+fn update_webview_state(webview: &mut Webview, state: &AppState) {
     let state = state.clone();
 
     execute_promise(

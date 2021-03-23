@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use validator::{Validate, ValidationError};
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
+#[derive(
+    Debug, Copy, Clone, PartialEq, Eq, Serialize_repr, Deserialize_repr,
+)]
 #[repr(u8)]
 pub enum MaybePlayer {
     None = 0,

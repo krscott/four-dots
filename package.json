@@ -40,6 +40,7 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
+    "@hqoss/monads": "^0.4.0",
     "sirv-cli": "^1.0.0",
     "tauri": "^0.14.1"
   }

@@ -1,19 +1,19 @@
 <script lang="ts">
-/* eslint-disable
-    @typescript-eslint/no-unsafe-member-access,
-    @typescript-eslint/no-unsafe-call,
-    @typescript-eslint/no-unsafe-assignment */
 
 import { invoke } from "tauri/api/tauri"
 import { fly } from "svelte/transition"
 import { quadIn } from "svelte/easing"
 
-import { gameBoardState, MaybePlayer } from "../gameBoardState"
+import { GameBoardState, MaybePlayer } from "../gameBoardState"
 
-$: isGameOver = !!$gameBoardState.winningSegment
+export let gameBoardState: GameBoardState
+
+const isClickable = (r: number, c: number): boolean => {
+    return gameBoardState.winningSegment.isNone() && !gameBoardState.isSet(r, c)
+}
 
 const cell_click_handler = (r: number, c: number) => {
-    if (!isGameOver && !$gameBoardState.isSet(r, c)) {
+    if (isClickable(r, c)) {
         invoke({
             cmd: "putPieceInColumn",
             column: c,
@@ -22,11 +22,13 @@ const cell_click_handler = (r: number, c: number) => {
 }
 
 const is_in_winning_segment = (r: number, c: number): boolean => {
-    if (!$gameBoardState.winningSegment) {
+    if (gameBoardState.winningSegment.isNone()) {
         return false
     }
 
-    for (let [wr, wc] of $gameBoardState.winningSegment[1]) {
+    const ws = gameBoardState.winningSegment.unwrap()
+
+    for (let [wr, wc] of ws[1]) {
         if (r == wr && c == wc) {
             return true
         }
@@ -39,12 +41,12 @@ const is_in_winning_segment = (r: number, c: number): boolean => {
 
 <div class="gameboard">
     <div class="gameboard-inner bg-color">
-        {#each [...$gameBoardState.eachRowIndex()] as r}
+        {#each [...gameBoardState.eachRowIndex()] as r}
             <div class="row">
-                {#each [...$gameBoardState.eachCellInRow(r)] as cell, c}
+                {#each [...gameBoardState.eachCellInRow(r)] as cell, c}
                     <div
                         class="cell"
-                        class:cursor-pointer={!isGameOver && !$gameBoardState.isSet(r, c)}
+                        class:cursor-pointer={isClickable(r, c)}
                         on:click={() => cell_click_handler(r, c)}
                     >
                         {#if cell !== MaybePlayer.None}
@@ -59,7 +61,7 @@ const is_in_winning_segment = (r: number, c: number): boolean => {
                                 out:fly="{{
                                     y: 600,
                                     duration: 300,
-                                    delay: 100 + ($gameBoardState.height - r - 1)*20,
+                                    delay: 100 + (gameBoardState.height - r - 1)*20,
                                     easing: quadIn
                                 }}"
                             >
