@@ -2,12 +2,9 @@
 
 import { invoke } from "tauri/api/tauri"
 
-import GameBoard from "./components/GameBoard.svelte"
-import PlayerPieces from "./components/PlayerPieces.svelte"
-import PlayerScore from "./components/PlayerScore.svelte"
 import FitToScreen from "./components/FitToScreen.svelte"
 import { appState } from "./appState"
-import { Player1, Player2 } from "./gameBoardState"
+import GameWorld from "./components/GameWorld.svelte"
 
 const windowBaseWidth = 800
 const windowBaseHeight = 600
@@ -16,15 +13,15 @@ invoke({
     cmd: "nop",
 })
 
-const resetBoard = () => {
+const start1P = () => {
     invoke({
-        cmd: "clearBoard",
+        cmd: "start1P"
     })
 }
 
-const startGame = () => {
+const start2P = () => {
     invoke({
-        cmd: "startGame"
+        cmd: "start2P"
     })
 }
 
@@ -35,104 +32,38 @@ const startGame = () => {
     {#if $appState.var === "Title"}
         <div class="title">
             <h1>Four Dots</h1>
-            <button on:click={startGame}>🧍‍♂️🧍‍♂️</button>
+            <button class="secondary-button emoji-font" on:click={start1P}>😛 / 🤖</button>
+            <button class="secondary-button emoji-font" on:click={start2P}>😛 / 😜</button>
+            <!-- <button class="secondary-button emoji-font" on:click={start2P}>😛 / 🌐</button> -->
         </div>
     {/if}
     {#if $appState.var === "Game"}
-        <div class="grid">
-            <div class="gameboard-container">
-                <GameBoard gameBoardState={$appState.vardata} />
-            </div>
-            <div class="player1-pieces">
-                <PlayerPieces player={Player1} gameBoardState={$appState.vardata}/>
-            </div>
-            <div class="player2-pieces">
-                <PlayerPieces player={Player2} gameBoardState={$appState.vardata}/>
-            </div>
-            <div class="footer">
-                <div class="player1-score">
-                    <PlayerScore player={Player1} gameBoardState={$appState.vardata} />
-                </div>
-                <button
-                    class="eject secondary-button emoji-font"
-                    on:click={resetBoard}
-                >
-                    <span>⤵</span>
-                </button>
-                <div class="player2-score">
-                    <PlayerScore player={Player2} gameBoardState={$appState.vardata} />
-                </div>
-            </div>
-        </div>
+        <GameWorld gameBoardState={$appState.vardata} />
     {/if}
 </FitToScreen>
 
 <style>
 
     .title {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
         text-align: center;
+        color: var(--text-em-color);
     }
 
-    .grid {
-        text-align: center;
-        padding: 1em;
-
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        grid-template-rows: auto 1fr;
-        grid-template-areas:
-            "player1 gameboard player2"
-            ". footer .";
-
-         gap: 1em;
-    }
-
-    .gameboard-container {
-        grid-area: gameboard;
-    }
-
-    .player1-pieces {
-        grid-area: player1;
-    }
-
-    .player2-pieces {
-        grid-area: player2;
-    }
-
-    .footer {
-        grid-area: footer;
-
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        grid-template-areas:
-            "player1 eject player2";
-    }
-
-    .player1-score {
-        grid-area: player1;
-        margin: auto;
-        margin-left: 0;
-    }
-
-    .eject {
-        grid-area: eject;
-    }
-
-    .player2-score {
-        grid-area: player2;
-        margin: auto;
-        margin-right: 0;
+    h1 {
+        margin: 0;
     }
 
     button {
-        position: relative;
-        width: 3rem;
-        height: 3rem;
+        display: block;
+        font-size: xx-large;
+        margin: auto;
+        margin-top: 1rem;
+        width: 9rem;
     }
 
-    button.emoji-font span {
-        font-size: xx-large;
-        position: absolute;
-        transform: translate(-50%, calc(-50% - 0.3rem));
-    }
 </style>

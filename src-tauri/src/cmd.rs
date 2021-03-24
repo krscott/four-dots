@@ -6,9 +6,11 @@ use crate::{app_state::AppState, game_board_state::GameBoardState};
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
     Nop,
-    StartGame,
+    Start1P,
+    Start2P,
     PutPieceInColumn { column: i32 },
     ClearBoard,
+    ReturnToTitle,
 }
 
 impl Cmd {
@@ -17,11 +19,12 @@ impl Cmd {
             AppState::Title => {
                 match self {
                     Cmd::Nop => {}
-                    Cmd::StartGame => {
+                    Cmd::Start1P | Cmd::Start2P => {
                         *state = AppState::Game(GameBoardState::default());
                     }
                     Cmd::PutPieceInColumn { .. } => {}
                     Cmd::ClearBoard => {}
+                    Cmd::ReturnToTitle => {}
                 };
             }
             AppState::Game(game_board_state) => {
@@ -29,13 +32,14 @@ impl Cmd {
 
                 match self {
                     Cmd::Nop => {}
-                    Cmd::StartGame => game_board_state.clear(),
+                    Cmd::Start1P | Cmd::Start2P => game_board_state.clear(),
                     Cmd::PutPieceInColumn { column } => {
                         game_board_state.put_piece_in_column(*column)?;
                     }
                     Cmd::ClearBoard => {
                         game_board_state.clear();
                     }
+                    Cmd::ReturnToTitle => *state = AppState::Title,
                 }
             }
         }

@@ -21,7 +21,7 @@ export let gameBoardState: GameBoardState
     {#each Array(Gbs.getRemainingPiecesCount(gameBoardState, player)) as _, i}
         <div
             class="piece"
-            out:fly="{{y: -600, duration: 200, easing: quadIn}}"
+            out:fly|local="{{y: -600, duration: 200, easing: quadIn}}"
             in:fly="{{y: -600, duration: 200, delay: 300 + i*20, easing: quadIn}}"
         ></div>
     {/each}

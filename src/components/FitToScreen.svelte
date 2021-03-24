@@ -13,7 +13,7 @@
     $: offsetX = Math.round((windowWidth - viewWidth * scale) / 2)
     $: offsetY = Math.round((windowHeight - viewHeight * scale) / 2)
 
-    $: console.log(offsetX, offsetY)
+    // $: console.log(offsetX, offsetY)
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />

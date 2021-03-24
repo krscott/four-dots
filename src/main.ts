@@ -20,7 +20,7 @@ window.rust_error_handler = (err: string) => {
 }
 
 window.rust_set_state = (new_state: AppState) => {
-    console.log(new_state)
+    // console.log(new_state)
     appState.update(() => new_state)
 }
 
