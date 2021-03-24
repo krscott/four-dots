@@ -16,7 +16,7 @@ invoke({
     cmd: "nop",
 })
 
-const reset_board = () => {
+const resetBoard = () => {
     invoke({
         cmd: "clearBoard",
     })
@@ -55,7 +55,7 @@ const startGame = () => {
                 </div>
                 <button
                     class="eject secondary-button emoji-font"
-                    on:click={reset_board}
+                    on:click={resetBoard}
                 >
                     <span>⤵</span>
                 </button>

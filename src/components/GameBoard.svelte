@@ -12,7 +12,7 @@ const isClickable = (r: number, c: number): boolean => {
     return gameBoardState.winningSegment.isNone() && !gameBoardState.isSet(r, c)
 }
 
-const cell_click_handler = (r: number, c: number) => {
+const cellClickHandler = (r: number, c: number) => {
     if (isClickable(r, c)) {
         invoke({
             cmd: "putPieceInColumn",
@@ -21,7 +21,7 @@ const cell_click_handler = (r: number, c: number) => {
     }
 }
 
-const is_in_winning_segment = (r: number, c: number): boolean => {
+const isInWinningSegment = (r: number, c: number): boolean => {
     if (gameBoardState.winningSegment.isNone()) {
         return false
     }
@@ -47,7 +47,7 @@ const is_in_winning_segment = (r: number, c: number): boolean => {
                     <div
                         class="cell"
                         class:cursor-pointer={isClickable(r, c)}
-                        on:click={() => cell_click_handler(r, c)}
+                        on:click={() => cellClickHandler(r, c)}
                     >
                         {#if cell !== MaybePlayer.None}
                             <div
@@ -66,7 +66,7 @@ const is_in_winning_segment = (r: number, c: number): boolean => {
                                 }}"
                             >
                                 <svg
-                                    class:glow={is_in_winning_segment(r, c)}
+                                    class:glow={isInWinningSegment(r, c)}
                                     fill="var(--player{cell}-color)"
                                 >
                                     <circle cx="50%" cy="50%" r="40%" />
