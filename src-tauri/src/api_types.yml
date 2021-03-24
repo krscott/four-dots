@@ -1,0 +1,68 @@
+---
+module: test
+types:
+  - Enum:
+      name: AppState
+      variants:
+        - name: Title
+        - name: Game
+          data:
+            Custom: GameBoardState
+
+  - Struct:
+      name: GameBoardState
+      fields:
+        - name: tick
+          data: Uint
+        - name: cells
+          data:
+            Array:
+              Custom: Cell
+        - name: width
+          data: Int
+        - name: height
+          data: Int
+        - name: current_player
+          data:
+            Custom: Player
+        - name: winning_segment
+          data:
+            Option:
+              Custom: Segment
+        - name: player1_score
+          data: Int
+        - name: player2_score
+          data: Int
+
+  - Enum:
+      name: Cell
+      variants:
+        - name: Empty
+        - name: Player1Piece
+        - name: Player2Piece
+
+  - Enum:
+      name: Player
+      variants:
+        - name: Player1
+        - name: Player2
+
+  - Struct:
+      name: Segment
+      fields:
+        - name: player
+          data:
+            Custom: Player
+        - name: points
+          data:
+            Array:
+              Custom: Point
+
+  - Struct:
+      name: Point
+      fields:
+        - name: x
+          data: Int
+        - name: y
+          data: Int
+

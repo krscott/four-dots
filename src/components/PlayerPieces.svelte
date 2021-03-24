@@ -4,20 +4,21 @@
 import { fly } from "svelte/transition"
 import { quadIn } from "svelte/easing"
 
-import { GameBoardState, Player } from "../gameBoardState"
+import type { GameBoardState, Player } from "../apiTypes"
+import { Gbs, playerInt } from "../gameBoardState"
 
-export let player = Player.Player1
+export let player: Player
 export let gameBoardState: GameBoardState
 
 </script>
 
 <div
     class="pieces-stack"
-    class:animate-stack={gameBoardState.winningSegment.isNone() && gameBoardState.currentPlayer == player}
-    style="--player-color: var(--player{player}-color)"
+    class:animate-stack={gameBoardState.winning_segment == null && gameBoardState.current_player.var === player.var}
+    style="--player-color: var(--player{playerInt(player)}-color)"
 >
     <div class="spacer"></div>
-    {#each Array(gameBoardState.getRemainingPiecesCount(player)) as _, i}
+    {#each Array(Gbs.getRemainingPiecesCount(gameBoardState, player)) as _, i}
         <div
             class="piece"
             out:fly="{{y: -600, duration: 200, easing: quadIn}}"

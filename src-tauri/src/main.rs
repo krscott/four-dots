@@ -3,6 +3,7 @@
     windows_subsystem = "windows"
 )]
 
+mod api_types;
 mod app_state;
 mod cmd;
 mod game_board_state;

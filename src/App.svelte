@@ -6,8 +6,8 @@ import GameBoard from "./components/GameBoard.svelte"
 import PlayerPieces from "./components/PlayerPieces.svelte"
 import PlayerScore from "./components/PlayerScore.svelte"
 import FitToScreen from "./components/FitToScreen.svelte"
-import { appState, TitleState } from "./appState"
-import { GameBoardState } from "./gameBoardState"
+import { appState } from "./appState"
+import { Player1, Player2 } from "./gameBoardState"
 
 const windowBaseWidth = 800
 const windowBaseHeight = 600
@@ -32,26 +32,26 @@ const startGame = () => {
 
 
 <FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
-    {#if $appState.state instanceof TitleState}
+    {#if $appState.var === "Title"}
         <div class="title">
             <h1>Four Dots</h1>
             <button on:click={startGame}>🧍‍♂️🧍‍♂️</button>
         </div>
     {/if}
-    {#if $appState.state instanceof GameBoardState}
+    {#if $appState.var === "Game"}
         <div class="grid">
             <div class="gameboard-container">
-                <GameBoard gameBoardState={$appState.state} />
+                <GameBoard gameBoardState={$appState.vardata} />
             </div>
             <div class="player1-pieces">
-                <PlayerPieces player={1} gameBoardState={$appState.state}/>
+                <PlayerPieces player={Player1} gameBoardState={$appState.vardata}/>
             </div>
             <div class="player2-pieces">
-                <PlayerPieces player={2} gameBoardState={$appState.state}/>
+                <PlayerPieces player={Player2} gameBoardState={$appState.vardata}/>
             </div>
             <div class="footer">
                 <div class="player1-score">
-                    <PlayerScore player={1} gameBoardState={$appState.state} />
+                    <PlayerScore player={Player1} gameBoardState={$appState.vardata} />
                 </div>
                 <button
                     class="eject secondary-button emoji-font"
@@ -60,7 +60,7 @@ const startGame = () => {
                     <span>⤵</span>
                 </button>
                 <div class="player2-score">
-                    <PlayerScore player={2} gameBoardState={$appState.state} />
+                    <PlayerScore player={Player2} gameBoardState={$appState.vardata} />
                 </div>
             </div>
         </div>

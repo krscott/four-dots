@@ -1,13 +1,4 @@
-use serde::{Deserialize, Serialize};
-
-use crate::game_board_state::GameBoardState;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "tag", content = "data", rename_all = "camelCase")]
-pub enum AppState {
-    Title,
-    Game(GameBoardState),
-}
+pub use crate::api_types::AppState;
 
 impl Default for AppState {
     fn default() -> Self {

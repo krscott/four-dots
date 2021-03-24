@@ -4,12 +4,14 @@ import { invoke } from "tauri/api/tauri"
 import { fly } from "svelte/transition"
 import { quadIn } from "svelte/easing"
 
-import { GameBoardState, MaybePlayer } from "../gameBoardState"
+import { Gbs, playerInt } from "../gameBoardState"
+import type { GameBoardState } from "../apiTypes"
+import { CellEmptyVar } from "../apiTypes"
 
 export let gameBoardState: GameBoardState
 
 const isClickable = (r: number, c: number): boolean => {
-    return gameBoardState.winningSegment.isNone() && !gameBoardState.isSet(r, c)
+    return gameBoardState.winning_segment === null && !Gbs.isSet(gameBoardState, r, c)
 }
 
 const cellClickHandler = (r: number, c: number) => {
@@ -22,14 +24,12 @@ const cellClickHandler = (r: number, c: number) => {
 }
 
 const isInWinningSegment = (r: number, c: number): boolean => {
-    if (gameBoardState.winningSegment.isNone()) {
+    if (gameBoardState.winning_segment === null) {
         return false
     }
 
-    const ws = gameBoardState.winningSegment.unwrap()
-
-    for (let [wr, wc] of ws[1]) {
-        if (r == wr && c == wc) {
+    for (let point of gameBoardState.winning_segment.points) {
+        if (c == point.x && r == point.y) {
             return true
         }
     }
@@ -41,15 +41,15 @@ const isInWinningSegment = (r: number, c: number): boolean => {
 
 <div class="gameboard">
     <div class="gameboard-inner bg-color">
-        {#each [...gameBoardState.eachRowIndex()] as r}
+        {#each [...Gbs.eachRowIndex(gameBoardState)] as r}
             <div class="row">
-                {#each [...gameBoardState.eachCellInRow(r)] as cell, c}
+                {#each [...Gbs.eachCellInRow(gameBoardState, r)] as cell, c}
                     <div
                         class="cell"
                         class:cursor-pointer={isClickable(r, c)}
                         on:click={() => cellClickHandler(r, c)}
                     >
-                        {#if cell !== MaybePlayer.None}
+                        {#if cell.var !== CellEmptyVar}
                             <div
                                 class="piece svg-container"
                                 in:fly="{{
@@ -67,7 +67,7 @@ const isInWinningSegment = (r: number, c: number): boolean => {
                             >
                                 <svg
                                     class:glow={isInWinningSegment(r, c)}
-                                    fill="var(--player{cell}-color)"
+                                    fill="var(--player{playerInt(cell)}-color)"
                                 >
                                     <circle cx="50%" cy="50%" r="40%" />
                                 </svg>
