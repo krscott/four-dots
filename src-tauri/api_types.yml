@@ -14,6 +14,12 @@ types:
       fields:
         - name: tick
           data: Uint
+        - name: player1_input
+          data:
+            Custom: InputType
+        - name: player2_input
+          data:
+            Custom: InputType
         - name: cells
           data:
             Array:
@@ -33,6 +39,12 @@ types:
           data: Int
         - name: player2_score
           data: Int
+
+  - Enum:
+      name: InputType
+      variants:
+        - name: Local
+        - name: Bot
 
   - Enum:
       name: Cell

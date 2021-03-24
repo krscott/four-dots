@@ -1,8 +1,9 @@
+use anyhow::anyhow;
 use serde::Deserialize;
 
 use crate::{app_state::AppState, game_board_state::GameBoardState};
 
-#[derive(Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
     Nop,
@@ -19,12 +20,19 @@ impl Cmd {
             AppState::Title => {
                 match self {
                     Cmd::Nop => {}
-                    Cmd::Start1P | Cmd::Start2P => {
-                        *state = AppState::Game(GameBoardState::default());
+                    Cmd::Start1P => {
+                        *state = AppState::Game(GameBoardState::vs_bot());
                     }
-                    Cmd::PutPieceInColumn { .. } => {}
-                    Cmd::ClearBoard => {}
-                    Cmd::ReturnToTitle => {}
+                    Cmd::Start2P => {
+                        *state = AppState::Game(GameBoardState::vs_p2());
+                    }
+                    Cmd::PutPieceInColumn { .. } | Cmd::ClearBoard | Cmd::ReturnToTitle => {
+                        return Err(anyhow!(
+                            "Unexpected command '{:?}' in state '{:?}'",
+                            self,
+                            state
+                        ));
+                    }
                 };
             }
             AppState::Game(game_board_state) => {
@@ -32,12 +40,20 @@ impl Cmd {
 
                 match self {
                     Cmd::Nop => {}
-                    Cmd::Start1P | Cmd::Start2P => game_board_state.clear(),
+                    Cmd::Start1P | Cmd::Start2P => {
+                        return Err(anyhow!(
+                            "Unexpected command '{:?}' in state '{:?}'",
+                            self,
+                            state
+                        ));
+                    }
                     Cmd::PutPieceInColumn { column } => {
                         game_board_state.put_piece_in_column(*column)?;
+                        game_board_state.take_turn_if_bot();
                     }
                     Cmd::ClearBoard => {
                         game_board_state.clear();
+                        game_board_state.take_turn_if_bot();
                     }
                     Cmd::ReturnToTitle => *state = AppState::Title,
                 }

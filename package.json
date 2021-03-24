@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build:api": "cross-env BUILD_API=1 && cd src-tauri && cargo build",
+    "build:api": "cd src-tauri && cross-env BUILD_API=1 cargo build",
     "build:svelte": "rollup -c",
     "build:tauri": "tauri build",
     "build": "run-s build:api lint build:svelte build:tauri",

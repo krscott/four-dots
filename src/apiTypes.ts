@@ -12,6 +12,8 @@ export const AppStateGameVar = "Game"
 
 export interface GameBoardState {
 	tick: number,
+	player1_input: InputType,
+	player2_input: InputType,
 	cells: Array<Cell>,
 	width: number,
 	height: number,
@@ -20,6 +22,15 @@ export interface GameBoardState {
 	player1_score: number,
 	player2_score: number,
 }
+
+export type InputType = (
+	{ var: "Local" } |
+	{ var: "Bot" }
+)
+
+export const InputTypeLocalVar = "Local"
+export const InputTypeBotVar = "Bot"
+
 
 export type Cell = (
 	{ var: "Empty" } |

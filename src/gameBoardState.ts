@@ -20,20 +20,21 @@ export const playerInt = (input: Cell | Player): number => {
 }
 
 export const Gbs = {
-    create(width: number, height: number): GameBoardState {
-        const cells = new Array<Cell>(height * width).fill(EmptyCell)
+    // create(width: number, height: number, is_player2_local: boolean): GameBoardState {
+    //     const cells = new Array<Cell>(height * width).fill(EmptyCell)
 
-        return {
-            tick: 0,
-            cells,
-            width,
-            height,
-            current_player: Player1,
-            winning_segment: null,
-            player1_score: 0,
-            player2_score: 0,
-        }
-    },
+    //     return {
+    //         tick: 0,
+    //         is_player2_local,
+    //         cells,
+    //         width,
+    //         height,
+    //         current_player: Player1,
+    //         winning_segment: null,
+    //         player1_score: 0,
+    //         player2_score: 0,
+    //     }
+    // },
 
     clear(gbs: GameBoardState): void {
         gbs.cells.fill(EmptyCell)

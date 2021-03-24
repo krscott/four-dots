@@ -1,6 +1,6 @@
 use anyhow::anyhow;
 
-pub use crate::api_types::{Cell, GameBoardState, Player, Point, Segment};
+pub use crate::api_types::{Cell, GameBoardState, InputType, Player, Point, Segment};
 
 impl From<Player> for Cell {
     fn from(player: Player) -> Self {
@@ -11,20 +11,24 @@ impl From<Player> for Cell {
     }
 }
 
-impl Default for GameBoardState {
-    fn default() -> Self {
-        GameBoardState::new(7, 6).unwrap()
-    }
-}
-
 impl GameBoardState {
-    pub fn new(width: i32, height: i32) -> anyhow::Result<Self> {
+    pub fn vs_p2() -> Self {
+        GameBoardState::new(7, 6, InputType::Local).unwrap()
+    }
+
+    pub fn vs_bot() -> Self {
+        GameBoardState::new(7, 6, InputType::Bot).unwrap()
+    }
+
+    pub fn new(width: i32, height: i32, player2_input: InputType) -> anyhow::Result<Self> {
         Self::check_width_height(width, height)?;
 
         let size = (width * height) as usize;
 
         Ok(Self {
             tick: 0,
+            player1_input: InputType::Local,
+            player2_input,
             cells: vec![Cell::Empty; size],
             width,
             height,
@@ -126,11 +130,29 @@ impl GameBoardState {
         Err(anyhow!("Column is full"))
     }
 
+    fn current_player_input(&self) -> &InputType {
+        match self.current_player {
+            Player::Player1 => &self.player1_input,
+            Player::Player2 => &self.player2_input,
+        }
+    }
+
     fn advance_turn(&mut self) {
         self.current_player = match self.current_player {
             Player::Player1 => Player::Player2,
             Player::Player2 => Player::Player1,
         };
+    }
+
+    pub fn take_turn_if_bot(&mut self) {
+        if self.winning_segment.is_none() {
+            match self.current_player_input() {
+                InputType::Local => {}
+                InputType::Bot => {
+                    self.ai_turn();
+                }
+            }
+        }
     }
 
     fn find_winning_segment(&self) -> Option<Segment> {
@@ -185,5 +207,13 @@ impl GameBoardState {
 
     pub fn step_tick(&mut self) {
         self.tick += 1;
+    }
+
+    fn ai_turn(&mut self) {
+        for c in 0..self.width {
+            if self.put_piece_in_column(c).is_ok() {
+                break;
+            }
+        }
     }
 }

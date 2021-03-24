@@ -10,6 +10,8 @@ pub enum AppState {
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct GameBoardState {
 	pub tick: u32,
+	pub player1_input: InputType,
+	pub player2_input: InputType,
 	pub cells: Vec<Cell>,
 	pub width: i32,
 	pub height: i32,
@@ -17,6 +19,13 @@ pub struct GameBoardState {
 	pub winning_segment: Option<Segment>,
 	pub player1_score: i32,
 	pub player2_score: i32,
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+#[serde(tag = "var", content = "vardata")]
+pub enum InputType {
+	Local,
+	Bot,
 }
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]

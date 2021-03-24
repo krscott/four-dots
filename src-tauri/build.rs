@@ -27,7 +27,7 @@ fn main() {
 
 fn build_api() {
     if env::var("BUILD_API").is_ok() {
-        let api_types_path = Path::new("src/api_types.yml");
+        let api_types_path = Path::new("api_types.yml");
         let rust_path = Path::new("src/api_types.rs");
         let ts_path = Path::new("../src/apiTypes.ts");
 
