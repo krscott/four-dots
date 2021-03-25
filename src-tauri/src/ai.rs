@@ -210,14 +210,14 @@ impl AiBrain {
             return win_state.score();
         }
 
-        let win_state = self.get_win_state(&board, self.look_ahead);
+        let win_state = self.get_predicted_win_state(&board, self.look_ahead);
 
         self.cache.insert(board, win_state);
 
         win_state.score()
     }
 
-    fn get_win_state(&mut self, board: &AiBoard, look_ahead: usize) -> AiWinState {
+    fn get_predicted_win_state(&mut self, board: &AiBoard, look_ahead: usize) -> AiWinState {
         let win_state = board.win_state();
 
         let win_state = match win_state {
@@ -233,24 +233,25 @@ impl AiBrain {
                 if lose_any {
                     AiWinState::Lose
                 } else if look_ahead > 0 {
-                    let my_moves_scores = their_moves
-                        .iter()
-                        .flat_map(|board| {
-                            (0..board.width)
-                                .filter_map(|column| board.with_move(AiPlayer::Me, column))
-                                .collect::<Vec<_>>()
-                        })
-                        .map(|board| self.get_win_state(&board, look_ahead - 1).score())
-                        .collect::<Vec<_>>();
+                    let (sum, len) = their_moves.into_iter().fold((0.0, 0), |acc, board| {
+                        (0..board.width)
+                            .filter_map(|column| board.with_move(AiPlayer::Me, column))
+                            .map(|board| {
+                                self.get_predicted_win_state(&board, look_ahead - 1).score()
+                            })
+                            .fold(acc, |(sum, len), score| (sum + score, len + 1))
+                    });
 
-                    AiWinState::Unknown(
-                        my_moves_scores.iter().sum::<f32>() / my_moves_scores.len() as f32,
-                    )
+                    AiWinState::Unknown(sum / len as f32)
                 } else {
                     AiWinState::Unknown(h)
                 }
             }
-            win_state => win_state,
+            AiWinState::Win => AiWinState::Win,
+            AiWinState::Lose => {
+                assert!(false); // This state should be impossible
+                AiWinState::Lose
+            }
         };
 
         win_state
