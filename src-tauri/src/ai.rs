@@ -1,5 +1,8 @@
 use float_ord::FloatOrd;
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    hash::{Hash, Hasher},
+};
 
 use crate::api_types::{Cell, GameBoardState, Player};
 
@@ -18,13 +21,6 @@ enum AiPlayer {
 //     }
 // }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-struct AiBoard {
-    cells: Vec<Option<AiPlayer>>,
-    width: i32,
-    height: i32,
-}
-
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum AiWinState {
     Unknown(f32),
@@ -32,13 +28,26 @@ enum AiWinState {
     Lose,
 }
 
-impl From<AiWinState> for f32 {
-    fn from(win_state: AiWinState) -> Self {
-        match win_state {
-            AiWinState::Unknown(x) => x,
+impl AiWinState {
+    fn score(&self) -> f32 {
+        match self {
+            AiWinState::Unknown(x) => *x,
             AiWinState::Win => 1.0,
             AiWinState::Lose => 0.0,
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct AiBoard {
+    cells: Vec<Option<AiPlayer>>,
+    width: i32,
+    height: i32,
+}
+
+impl Hash for AiBoard {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.cells.hash(state);
     }
 }
 
@@ -165,23 +174,25 @@ impl AiBoard {
 
 pub struct AiBrain {
     cache: HashMap<AiBoard, AiWinState>,
+    look_ahead: usize,
 }
 
 impl AiBrain {
-    pub fn new() -> Self {
+    pub fn new(look_ahead: usize) -> Self {
         Self {
             cache: Default::default(),
+            look_ahead,
         }
     }
 
-    pub fn get_best_move(&mut self, gameboard: &GameBoardState, look_ahead: usize) -> i32 {
+    pub fn get_best_move(&mut self, gameboard: &GameBoardState) -> i32 {
         let ai_board = AiBoard::from_gameboard(gameboard);
 
         let move_scores = (0..ai_board.width)
             .filter_map(|column| {
                 ai_board
                     .with_move(AiPlayer::Me, column)
-                    .map(|board| (column, self.get_score(board, look_ahead)))
+                    .map(|board| (column, self.get_score_cached(board)))
             })
             .collect::<Vec<_>>();
 
@@ -194,20 +205,19 @@ impl AiBrain {
             .unwrap_or(ai_board.width / 2)
     }
 
-    fn get_score(&mut self, board: AiBoard, look_ahead: usize) -> f32 {
+    fn get_score_cached(&mut self, board: AiBoard) -> f32 {
         if let Some(win_state) = self.cache.get(&board) {
-            if look_ahead == 0 {
-                return (*win_state).into();
-            }
-
-            match win_state {
-                AiWinState::Unknown(_) => {}
-                win_state => {
-                    return (*win_state).into();
-                }
-            }
+            return win_state.score();
         }
 
+        let win_state = self.get_win_state(&board, self.look_ahead);
+
+        self.cache.insert(board, win_state);
+
+        win_state.score()
+    }
+
+    fn get_win_state(&mut self, board: &AiBoard, look_ahead: usize) -> AiWinState {
         let win_state = board.win_state();
 
         let win_state = match win_state {
@@ -230,7 +240,7 @@ impl AiBrain {
                                 .filter_map(|column| board.with_move(AiPlayer::Me, column))
                                 .collect::<Vec<_>>()
                         })
-                        .map(|board| self.get_score(board, look_ahead - 1))
+                        .map(|board| self.get_win_state(&board, look_ahead - 1).score())
                         .collect::<Vec<_>>();
 
                     AiWinState::Unknown(
@@ -243,8 +253,6 @@ impl AiBrain {
             win_state => win_state,
         };
 
-        self.cache.insert(board, win_state);
-
-        win_state.into()
+        win_state
     }
 }

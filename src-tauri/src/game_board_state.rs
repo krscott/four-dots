@@ -150,7 +150,7 @@ impl GameBoardState {
             match self.current_player_input() {
                 InputType::Local => {}
                 InputType::Bot => {
-                    let c = ai.get_best_move(self, 0);
+                    let c = ai.get_best_move(self);
                     self.put_piece_in_column(c).ok();
                 }
             }

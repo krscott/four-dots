@@ -17,7 +17,7 @@ use cmd::Cmd;
 fn main() {
     // let mut state = GameBoardState::new(7, 6).unwrap();
     let mut state = AppState::default();
-    let mut ai_brain = ai::AiBrain::new();
+    let mut ai_brain = ai::AiBrain::new(1);
 
     tauri::AppBuilder::new()
         // .setup(move |_webview, _source| {})
@@ -28,6 +28,7 @@ fn main() {
                 Err(e) => Err(e.to_string()),
                 Ok(command) => {
                     let res = command.handle(&mut state, &mut ai_brain);
+
                     update_webview_state(webview, &state);
 
                     match res {
