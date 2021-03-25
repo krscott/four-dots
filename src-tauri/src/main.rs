@@ -3,6 +3,7 @@
     windows_subsystem = "windows"
 )]
 
+mod ai;
 mod api_types;
 mod app_state;
 mod cmd;
@@ -16,6 +17,7 @@ use cmd::Cmd;
 fn main() {
     // let mut state = GameBoardState::new(7, 6).unwrap();
     let mut state = AppState::default();
+    let mut ai_brain = ai::AiBrain::new();
 
     tauri::AppBuilder::new()
         // .setup(move |_webview, _source| {})
@@ -25,7 +27,7 @@ fn main() {
             match serde_json::from_str::<'_, Cmd>(arg) {
                 Err(e) => Err(e.to_string()),
                 Ok(command) => {
-                    let res = command.handle(&mut state);
+                    let res = command.handle(&mut state, &mut ai_brain);
                     update_webview_state(webview, &state);
 
                     match res {

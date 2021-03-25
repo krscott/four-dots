@@ -17,6 +17,7 @@ serde_path_to_error = "0.1"
 validator = { version = "0.12", features = [ "derive" ] }
 tauri = { version = "0.11", features = [ "all-api" ] }
 anyhow = "1.0"
+float-ord = "0.2"
 
 [build-dependencies]
 api_typer = { git = "https://github.com/krscott/api_typer", rev = "a4e80ffee7f736563e04aad3e9f957e13431060d" }

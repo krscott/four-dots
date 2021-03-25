@@ -1,5 +1,6 @@
 use anyhow::anyhow;
 
+use crate::ai::AiBrain;
 pub use crate::api_types::{Cell, GameBoardState, InputType, Player, Point, Segment};
 
 impl From<Player> for Cell {
@@ -144,12 +145,13 @@ impl GameBoardState {
         };
     }
 
-    pub fn take_turn_if_bot(&mut self) {
+    pub fn take_turn_if_bot(&mut self, ai: &mut AiBrain) {
         if self.winning_segment.is_none() {
             match self.current_player_input() {
                 InputType::Local => {}
                 InputType::Bot => {
-                    self.ai_turn();
+                    let c = ai.get_best_move(self, 0);
+                    self.put_piece_in_column(c).ok();
                 }
             }
         }
@@ -207,13 +209,5 @@ impl GameBoardState {
 
     pub fn step_tick(&mut self) {
         self.tick += 1;
-    }
-
-    fn ai_turn(&mut self) {
-        for c in 0..self.width {
-            if self.put_piece_in_column(c).is_ok() {
-                break;
-            }
-        }
     }
 }

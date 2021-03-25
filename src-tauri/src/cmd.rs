@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use serde::Deserialize;
 
-use crate::{app_state::AppState, game_board_state::GameBoardState};
+use crate::{ai::AiBrain, app_state::AppState, game_board_state::GameBoardState};
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
@@ -15,7 +15,7 @@ pub enum Cmd {
 }
 
 impl Cmd {
-    pub fn handle(&self, state: &mut AppState) -> anyhow::Result<()> {
+    pub fn handle(&self, state: &mut AppState, ai: &mut AiBrain) -> anyhow::Result<()> {
         match state {
             AppState::Title => {
                 match self {
@@ -49,11 +49,11 @@ impl Cmd {
                     }
                     Cmd::PutPieceInColumn { column } => {
                         game_board_state.put_piece_in_column(*column)?;
-                        game_board_state.take_turn_if_bot();
+                        game_board_state.take_turn_if_bot(ai);
                     }
                     Cmd::ClearBoard => {
                         game_board_state.clear();
-                        game_board_state.take_turn_if_bot();
+                        game_board_state.take_turn_if_bot(ai);
                     }
                     Cmd::ReturnToTitle => *state = AppState::Title,
                 }

@@ -503,6 +503,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "float-ord"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7bad48618fdb549078c333a7a8528acb57af271d0433bdecd523eb620628364e"
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -539,6 +545,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "api_typer",
+ "float-ord",
  "serde",
  "serde_json",
  "serde_path_to_error",
