@@ -6,12 +6,17 @@ import { quadIn } from "svelte/easing"
 
 import { Gbs, playerInt } from "../gameBoardState"
 import type { GameBoardState } from "../apiTypes"
-import { CellEmptyVar } from "../apiTypes"
+import { CellEmptyVar, PlayerPlayer1Var } from "../apiTypes"
 
 export let gameBoardState: GameBoardState
+export let singlePlayer: boolean
 
 const isClickable = (r: number, c: number): boolean => {
-    return gameBoardState.winning_segment === null && !Gbs.isSet(gameBoardState, r, c)
+    return (
+        (!singlePlayer || gameBoardState.current_player.var === PlayerPlayer1Var) &&
+        gameBoardState.winning_segment === null &&
+        !Gbs.isSet(gameBoardState, r, c)
+    )
 }
 
 const cellClickHandler = (r: number, c: number) => {

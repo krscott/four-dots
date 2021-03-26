@@ -5,7 +5,10 @@ types:
       name: AppState
       variants:
         - name: Title
-        - name: Game
+        - name: GameVsBot
+          data:
+            Custom: GameBoardState
+        - name: GameVsPlayer
           data:
             Custom: GameBoardState
 

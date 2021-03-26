@@ -5,6 +5,7 @@ import { invoke } from "tauri/api/tauri"
 import FitToScreen from "./components/FitToScreen.svelte"
 import { appState } from "./appState"
 import GameWorld from "./components/GameWorld.svelte"
+import { AppStateGameVsBotVar, AppStateGameVsPlayerVar, AppStateTitleVar } from "./apiTypes"
 
 const windowBaseWidth = 800
 const windowBaseHeight = 600
@@ -29,7 +30,7 @@ const start2P = () => {
 
 
 <FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
-    {#if $appState.var === "Title"}
+    {#if $appState.var === AppStateTitleVar}
         <div class="title">
             <h1>Four Dots</h1>
             <button class="secondary-button emoji-font" on:click={start1P}>😛 / 🤖</button>
@@ -37,8 +38,11 @@ const start2P = () => {
             <!-- <button class="secondary-button emoji-font" on:click={start2P}>😛 / 🌐</button> -->
         </div>
     {/if}
-    {#if $appState.var === "Game"}
-        <GameWorld gameBoardState={$appState.vardata} />
+    {#if $appState.var === AppStateGameVsBotVar || $appState.var === AppStateGameVsPlayerVar}
+        <GameWorld
+            gameBoardState={$appState.vardata}
+            singlePlayer={$appState.var === AppStateGameVsBotVar}
+        />
     {/if}
 </FitToScreen>
 

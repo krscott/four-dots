@@ -10,6 +10,7 @@ import { Player1, Player2 } from "../gameBoardState"
 import type { GameBoardState } from "../apiTypes"
 
 export let gameBoardState: GameBoardState
+export let singlePlayer: boolean
 
 invoke({
     cmd: "nop",
@@ -32,7 +33,7 @@ const returnToTitle = () => {
 
 <div class="grid" transition:fade>
     <div class="gameboard-container">
-        <GameBoard gameBoardState={gameBoardState} />
+        <GameBoard gameBoardState={gameBoardState} singlePlayer={singlePlayer} />
     </div>
     <div class="player1-pieces">
         <PlayerPieces player={Player1} gameBoardState={gameBoardState}/>

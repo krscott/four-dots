@@ -15,7 +15,6 @@ use app_state::AppState;
 use cmd::Cmd;
 
 fn main() {
-    // let mut state = GameBoardState::new(7, 6).unwrap();
     let mut state = AppState::default();
     let mut ai_brain = ai::AiBrain::new(2);
 

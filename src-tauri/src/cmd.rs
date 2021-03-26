@@ -10,6 +10,7 @@ pub enum Cmd {
     Start1P,
     Start2P,
     PutPieceInColumn { column: i32 },
+    GetAiTurn,
     ClearBoard,
     ReturnToTitle,
 }
@@ -21,12 +22,15 @@ impl Cmd {
                 match self {
                     Cmd::Nop => {}
                     Cmd::Start1P => {
-                        *state = AppState::Game(GameBoardState::vs_bot());
+                        *state = AppState::GameVsBot(GameBoardState::vs_bot());
                     }
                     Cmd::Start2P => {
-                        *state = AppState::Game(GameBoardState::vs_p2());
+                        *state = AppState::GameVsPlayer(GameBoardState::vs_p2());
                     }
-                    Cmd::PutPieceInColumn { .. } | Cmd::ClearBoard | Cmd::ReturnToTitle => {
+                    Cmd::PutPieceInColumn { .. }
+                    | Cmd::ClearBoard
+                    | Cmd::ReturnToTitle
+                    | Cmd::GetAiTurn => {
                         return Err(anyhow!(
                             "Unexpected command '{:?}' in state '{:?}'",
                             self,
@@ -35,11 +39,21 @@ impl Cmd {
                     }
                 };
             }
-            AppState::Game(game_board_state) => {
+            AppState::GameVsBot(game_board_state) => {
                 game_board_state.step_tick();
 
                 match self {
                     Cmd::Nop => {}
+                    Cmd::PutPieceInColumn { column } => {
+                        game_board_state.put_piece_in_column(*column)?;
+                    }
+                    Cmd::ClearBoard => {
+                        game_board_state.clear();
+                    }
+                    Cmd::ReturnToTitle => *state = AppState::Title,
+                    Cmd::GetAiTurn => {
+                        game_board_state.take_turn_if_bot(ai);
+                    }
                     Cmd::Start1P | Cmd::Start2P => {
                         return Err(anyhow!(
                             "Unexpected command '{:?}' in state '{:?}'",
@@ -47,15 +61,27 @@ impl Cmd {
                             state
                         ));
                     }
+                }
+            }
+            AppState::GameVsPlayer(game_board_state) => {
+                game_board_state.step_tick();
+
+                match self {
+                    Cmd::Nop => {}
                     Cmd::PutPieceInColumn { column } => {
                         game_board_state.put_piece_in_column(*column)?;
-                        game_board_state.take_turn_if_bot(ai);
                     }
                     Cmd::ClearBoard => {
                         game_board_state.clear();
-                        game_board_state.take_turn_if_bot(ai);
                     }
                     Cmd::ReturnToTitle => *state = AppState::Title,
+                    Cmd::Start1P | Cmd::Start2P | Cmd::GetAiTurn => {
+                        return Err(anyhow!(
+                            "Unexpected command '{:?}' in state '{:?}'",
+                            self,
+                            state
+                        ));
+                    }
                 }
             }
         }

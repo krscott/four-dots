@@ -4,7 +4,8 @@
 #[serde(tag = "var", content = "vardata")]
 pub enum AppState {
 	Title,
-	Game(GameBoardState),
+	GameVsBot(GameBoardState),
+	GameVsPlayer(GameBoardState),
 }
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]

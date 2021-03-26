@@ -3,11 +3,13 @@
 
 export type AppState = (
 	{ var: "Title" } |
-	{ var: "Game", vardata: GameBoardState }
+	{ var: "GameVsBot", vardata: GameBoardState } |
+	{ var: "GameVsPlayer", vardata: GameBoardState }
 )
 
 export const AppStateTitleVar = "Title"
-export const AppStateGameVar = "Game"
+export const AppStateGameVsBotVar = "GameVsBot"
+export const AppStateGameVsPlayerVar = "GameVsPlayer"
 
 
 export interface GameBoardState {
