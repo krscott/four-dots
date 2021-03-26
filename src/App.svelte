@@ -31,8 +31,15 @@ const start2P = () => {
 
 <FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
     {#if $appState.var === AppStateTitleVar}
-        <div class="title">
-            <h1>Four Dots</h1>
+        <div id="title">
+            <!-- <h1>Four Dots</h1> -->
+            <div id="title-dots">
+                {#each [1, 2, 2, 1] as x}
+                    <svg fill="var(--player{x}-color)">
+                        <circle cx="50%" cy="50%" r="40%" />
+                    </svg>
+                {/each}
+            </div>
             <button class="secondary-button emoji-font" on:click={start1P}>😛 / 🤖</button>
             <button class="secondary-button emoji-font" on:click={start2P}>😛 / 😜</button>
             <!-- <button class="secondary-button emoji-font" on:click={start2P}>😛 / 🌐</button> -->
@@ -48,7 +55,7 @@ const start2P = () => {
 
 <style>
 
-    .title {
+    #title {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -58,9 +65,15 @@ const start2P = () => {
         color: var(--text-em-color);
     }
 
-    h1 {
-        margin: 0;
+    #title-dots svg {
+        display: inline-block;
+        width: 9rem;
+        height: 9rem;
     }
+
+    /* h1 {
+        margin: 0;
+    } */
 
     button {
         display: block;
