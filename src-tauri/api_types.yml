@@ -5,6 +5,7 @@ types:
       name: AppState
       variants:
         - name: Title
+        - name: SelectDifficulty
         - name: GameVsBot
           data:
             Custom: GameBoardState
@@ -48,6 +49,10 @@ types:
       variants:
         - name: Local
         - name: Bot
+          data:
+            - name: difficulty
+              data:
+                Custom: Difficulty
 
   - Enum:
       name: Cell
@@ -81,3 +86,10 @@ types:
         - name: y
           data: Int
 
+  - Enum:
+      name: Difficulty
+      variants:
+        - name: Easy
+        - name: Medium
+        - name: Hard
+        - name: Expert

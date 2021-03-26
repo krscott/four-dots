@@ -4,7 +4,7 @@ use std::{
     hash::{Hash, Hasher},
 };
 
-use crate::api_types::{Cell, GameBoardState, Player};
+use crate::api_types::{Cell, Difficulty, GameBoardState, Player};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum AiPlayer {
@@ -172,13 +172,20 @@ impl AiBoard {
     }
 }
 
-pub struct AiBrain {
+pub struct AiBrainDifficulty {
     cache: HashMap<AiBoard, AiWinState>,
     look_ahead: usize,
 }
 
-impl AiBrain {
-    pub fn new(look_ahead: usize) -> Self {
+impl AiBrainDifficulty {
+    pub fn new(difficulty: Difficulty) -> Self {
+        let look_ahead = match difficulty {
+            Difficulty::Easy => 0,
+            Difficulty::Medium => 1,
+            Difficulty::Hard => 2,
+            Difficulty::Expert => 3,
+        };
+
         Self {
             cache: Default::default(),
             look_ahead,
@@ -255,5 +262,32 @@ impl AiBrain {
         };
 
         win_state
+    }
+}
+
+pub struct AiBrain {
+    easy: AiBrainDifficulty,
+    medium: AiBrainDifficulty,
+    hard: AiBrainDifficulty,
+    expert: AiBrainDifficulty,
+}
+
+impl AiBrain {
+    pub fn new() -> Self {
+        Self {
+            easy: AiBrainDifficulty::new(Difficulty::Easy),
+            medium: AiBrainDifficulty::new(Difficulty::Medium),
+            hard: AiBrainDifficulty::new(Difficulty::Hard),
+            expert: AiBrainDifficulty::new(Difficulty::Expert),
+        }
+    }
+
+    pub fn get_best_move(&mut self, difficulty: &Difficulty, gameboard: &GameBoardState) -> i32 {
+        match difficulty {
+            Difficulty::Easy => self.easy.get_best_move(gameboard),
+            Difficulty::Medium => self.medium.get_best_move(gameboard),
+            Difficulty::Hard => self.hard.get_best_move(gameboard),
+            Difficulty::Expert => self.expert.get_best_move(gameboard),
+        }
     }
 }

@@ -1,11 +1,16 @@
 <script lang="ts">
 
+import { fade } from "svelte/transition"
 import { invoke } from "tauri/api/tauri"
 
 import FitToScreen from "./components/FitToScreen.svelte"
 import { appState } from "./appState"
 import GameWorld from "./components/GameWorld.svelte"
-import { AppStateGameVsBotVar, AppStateGameVsPlayerVar, AppStateTitleVar } from "./apiTypes"
+import type { Difficulty } from "./apiTypes"
+import {
+    AppStateGameVsBotVar, AppStateGameVsPlayerVar, AppStateSelectDifficultyVar, AppStateTitleVar,
+    DifficultyEasyVar, DifficultyMediumVar, DifficultyHardVar, DifficultyExpertVar
+} from "./apiTypes"
 
 const windowBaseWidth = 800
 const windowBaseHeight = 600
@@ -14,9 +19,10 @@ invoke({
     cmd: "nop",
 })
 
-const start1P = () => {
+const start1P = (difficulty: Difficulty | null) => {
     invoke({
-        cmd: "start1P"
+        cmd: "start1P",
+        difficulty,
     })
 }
 
@@ -26,12 +32,18 @@ const start2P = () => {
     })
 }
 
+const returnToTitle = () => {
+    invoke({
+        cmd: "returnToTitle"
+    })
+}
+
 </script>
 
 
 <FitToScreen viewWidth={windowBaseWidth} viewHeight={windowBaseHeight}>
     {#if $appState.var === AppStateTitleVar}
-        <div id="title">
+        <div class="title-menu" transition:fade>
             <!-- <h1>Four Dots</h1> -->
             <div id="title-dots">
                 {#each [1, 2, 2, 1] as x}
@@ -40,9 +52,49 @@ const start2P = () => {
                     </svg>
                 {/each}
             </div>
-            <button class="secondary-button emoji-font" on:click={start1P}>😛 / 🤖</button>
+            <button class="secondary-button emoji-font" on:click={() => start1P(null)}>😛 / 🤖</button>
             <button class="secondary-button emoji-font" on:click={start2P}>😛 / 😜</button>
             <!-- <button class="secondary-button emoji-font" on:click={start2P}>😛 / 🌐</button> -->
+        </div>
+    {/if}
+    {#if $appState.var === AppStateSelectDifficultyVar}
+        <div class="difficulty-menu" transition:fade>
+            <h1 class="emoji-font">🤖</h1>
+            <div>
+                <button
+                    class="secondary-button emoji-font"
+                    on:click={() => start1P({ var: DifficultyEasyVar })}
+                >
+                    👶
+                </button>
+                <button
+                    class="secondary-button emoji-font"
+                    on:click={() => start1P({ var: DifficultyMediumVar })}
+                >
+                    🙂
+                </button>
+                <button
+                    class="secondary-button emoji-font"
+                    on:click={() => start1P({ var: DifficultyHardVar })}
+                >
+                    😓
+                </button>
+                <button
+                    class="secondary-button emoji-font"
+                    on:click={() => start1P({ var: DifficultyExpertVar })}
+                >
+                    😈
+                </button>
+            </div>
+
+            <div>
+                <button
+                    class="secondary-button emoji-font"
+                    on:click={returnToTitle}
+                >
+                    ◀
+                </button>
+            </div>
         </div>
     {/if}
     {#if $appState.var === AppStateGameVsBotVar || $appState.var === AppStateGameVsPlayerVar}
@@ -55,7 +107,7 @@ const start2P = () => {
 
 <style>
 
-    #title {
+    .title-menu, .difficulty-menu {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -76,11 +128,25 @@ const start2P = () => {
     } */
 
     button {
-        display: block;
         font-size: xx-large;
         margin: auto;
         margin-top: 1rem;
         width: 9rem;
+    }
+
+    .title-menu button {
+        display: block;
+        width: 9rem;
+    }
+
+    .difficulty-menu button {
+        display: inline-block;
+        width: 4rem;
+    }
+
+    .difficulty-menu h1 {
+        font-size: 4rem;
+        margin: 0;
     }
 
 </style>

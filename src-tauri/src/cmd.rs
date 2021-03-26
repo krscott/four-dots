@@ -1,13 +1,15 @@
 use anyhow::anyhow;
 use serde::Deserialize;
 
-use crate::{ai::AiBrain, app_state::AppState, game_board_state::GameBoardState};
+use crate::{
+    ai::AiBrain, api_types::Difficulty, app_state::AppState, game_board_state::GameBoardState,
+};
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "cmd", rename_all = "camelCase")]
 pub enum Cmd {
     Nop,
-    Start1P,
+    Start1P { difficulty: Option<Difficulty> },
     Start2P,
     PutPieceInColumn { column: i32 },
     GetAiTurn,
@@ -21,8 +23,13 @@ impl Cmd {
             AppState::Title => {
                 match self {
                     Cmd::Nop => {}
-                    Cmd::Start1P => {
-                        *state = AppState::GameVsBot(GameBoardState::vs_bot());
+                    Cmd::Start1P { difficulty } => {
+                        *state = match difficulty {
+                            Some(difficulty) => {
+                                AppState::GameVsBot(GameBoardState::vs_bot(difficulty.clone()))
+                            }
+                            None => AppState::SelectDifficulty,
+                        }
                     }
                     Cmd::Start2P => {
                         *state = AppState::GameVsPlayer(GameBoardState::vs_p2());
@@ -30,6 +37,30 @@ impl Cmd {
                     Cmd::PutPieceInColumn { .. }
                     | Cmd::ClearBoard
                     | Cmd::ReturnToTitle
+                    | Cmd::GetAiTurn => {
+                        return Err(anyhow!(
+                            "Unexpected command '{:?}' in state '{:?}'",
+                            self,
+                            state
+                        ));
+                    }
+                };
+            }
+            AppState::SelectDifficulty => {
+                match self {
+                    Cmd::Nop => {}
+                    Cmd::Start1P { difficulty } => {
+                        *state = match difficulty {
+                            Some(difficulty) => {
+                                AppState::GameVsBot(GameBoardState::vs_bot(difficulty.clone()))
+                            }
+                            None => AppState::SelectDifficulty,
+                        }
+                    }
+                    Cmd::ReturnToTitle => *state = AppState::Title,
+                    Cmd::Start2P
+                    | Cmd::PutPieceInColumn { .. }
+                    | Cmd::ClearBoard
                     | Cmd::GetAiTurn => {
                         return Err(anyhow!(
                             "Unexpected command '{:?}' in state '{:?}'",
@@ -54,7 +85,7 @@ impl Cmd {
                     Cmd::GetAiTurn => {
                         game_board_state.take_turn_if_bot(ai);
                     }
-                    Cmd::Start1P | Cmd::Start2P => {
+                    Cmd::Start1P { .. } | Cmd::Start2P => {
                         return Err(anyhow!(
                             "Unexpected command '{:?}' in state '{:?}'",
                             self,
@@ -75,7 +106,7 @@ impl Cmd {
                         game_board_state.clear();
                     }
                     Cmd::ReturnToTitle => *state = AppState::Title,
-                    Cmd::Start1P | Cmd::Start2P | Cmd::GetAiTurn => {
+                    Cmd::Start1P { .. } | Cmd::Start2P | Cmd::GetAiTurn => {
                         return Err(anyhow!(
                             "Unexpected command '{:?}' in state '{:?}'",
                             self,

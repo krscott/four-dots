@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 
-use crate::ai::AiBrain;
 pub use crate::api_types::{Cell, GameBoardState, InputType, Player, Point, Segment};
+use crate::{ai::AiBrain, api_types::Difficulty};
 
 impl From<Player> for Cell {
     fn from(player: Player) -> Self {
@@ -17,8 +17,8 @@ impl GameBoardState {
         GameBoardState::new(7, 6, InputType::Local).unwrap()
     }
 
-    pub fn vs_bot() -> Self {
-        GameBoardState::new(7, 6, InputType::Bot).unwrap()
+    pub fn vs_bot(difficulty: Difficulty) -> Self {
+        GameBoardState::new(7, 6, InputType::Bot { difficulty }).unwrap()
     }
 
     pub fn new(width: i32, height: i32, player2_input: InputType) -> anyhow::Result<Self> {
@@ -149,8 +149,8 @@ impl GameBoardState {
         if self.winning_segment.is_none() {
             match self.current_player_input() {
                 InputType::Local => {}
-                InputType::Bot => {
-                    let c = ai.get_best_move(self);
+                InputType::Bot { difficulty } => {
+                    let c = ai.get_best_move(difficulty, self);
                     self.put_piece_in_column(c).ok();
                 }
             }

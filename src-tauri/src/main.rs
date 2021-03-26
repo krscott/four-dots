@@ -16,7 +16,7 @@ use cmd::Cmd;
 
 fn main() {
     let mut state = AppState::default();
-    let mut ai_brain = ai::AiBrain::new(2);
+    let mut ai_brain = ai::AiBrain::new();
 
     tauri::AppBuilder::new()
         // .setup(move |_webview, _source| {})
@@ -26,6 +26,7 @@ fn main() {
             match serde_json::from_str::<'_, Cmd>(arg) {
                 Err(e) => Err(e.to_string()),
                 Ok(command) => {
+                    println!("{:?}", command);
                     let res = command.handle(&mut state, &mut ai_brain);
 
                     update_webview_state(webview, &state);

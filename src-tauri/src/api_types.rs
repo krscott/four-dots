@@ -4,6 +4,7 @@
 #[serde(tag = "var", content = "vardata")]
 pub enum AppState {
 	Title,
+	SelectDifficulty,
 	GameVsBot(GameBoardState),
 	GameVsPlayer(GameBoardState),
 }
@@ -26,7 +27,9 @@ pub struct GameBoardState {
 #[serde(tag = "var", content = "vardata")]
 pub enum InputType {
 	Local,
-	Bot,
+	Bot {
+		difficulty: Difficulty,
+	},
 }
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
@@ -54,4 +57,13 @@ pub struct Segment {
 pub struct Point {
 	pub x: i32,
 	pub y: i32,
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+#[serde(tag = "var", content = "vardata")]
+pub enum Difficulty {
+	Easy,
+	Medium,
+	Hard,
+	Expert,
 }

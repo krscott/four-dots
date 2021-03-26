@@ -3,11 +3,13 @@
 
 export type AppState = (
 	{ var: "Title" } |
+	{ var: "SelectDifficulty" } |
 	{ var: "GameVsBot", vardata: GameBoardState } |
 	{ var: "GameVsPlayer", vardata: GameBoardState }
 )
 
 export const AppStateTitleVar = "Title"
+export const AppStateSelectDifficultyVar = "SelectDifficulty"
 export const AppStateGameVsBotVar = "GameVsBot"
 export const AppStateGameVsPlayerVar = "GameVsPlayer"
 
@@ -27,7 +29,9 @@ export interface GameBoardState {
 
 export type InputType = (
 	{ var: "Local" } |
-	{ var: "Bot" }
+	{ var: "Bot", vardata:  {
+		difficulty: Difficulty,
+	} }
 )
 
 export const InputTypeLocalVar = "Local"
@@ -63,3 +67,16 @@ export interface Point {
 	x: number,
 	y: number,
 }
+
+export type Difficulty = (
+	{ var: "Easy" } |
+	{ var: "Medium" } |
+	{ var: "Hard" } |
+	{ var: "Expert" }
+)
+
+export const DifficultyEasyVar = "Easy"
+export const DifficultyMediumVar = "Medium"
+export const DifficultyHardVar = "Hard"
+export const DifficultyExpertVar = "Expert"
+
