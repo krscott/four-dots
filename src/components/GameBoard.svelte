@@ -4,9 +4,9 @@ import { invoke } from "tauri/api/tauri"
 import { fly } from "svelte/transition"
 import { quadIn } from "svelte/easing"
 
-import { Gbs, playerInt } from "../gameBoardState"
+import { Gbs } from "../gameBoardState"
 import type { GameBoardState } from "../apiTypes"
-import { CellEmptyVar, PlayerPlayer1Var } from "../apiTypes"
+import { CellEmptyVar, PlayerPlayer1Var, CellPlayer1PieceVar } from "../apiTypes"
 
 export let gameBoardState: GameBoardState
 export let singlePlayer: boolean
@@ -70,12 +70,22 @@ const isInWinningSegment = (r: number, c: number): boolean => {
                                     easing: quadIn
                                 }}"
                             >
-                                <svg
-                                    class:glow={isInWinningSegment(r, c)}
-                                    fill="var(--player{playerInt(cell)}-color)"
-                                >
-                                    <circle cx="50%" cy="50%" r="40%" />
-                                </svg>
+                                <!-- Separate svg tags required to force Svelte redraw -->
+                                {#if cell.var === CellPlayer1PieceVar}
+                                    <svg
+                                        class:glow={isInWinningSegment(r, c)}
+                                        fill="var(--player1-color)"
+                                    >
+                                        <circle cx="50%" cy="50%" r="40%" />
+                                    </svg>
+                                {:else}
+                                    <svg
+                                        class:glow={isInWinningSegment(r, c)}
+                                        fill="var(--player2-color)"
+                                    >
+                                        <circle cx="50%" cy="50%" r="40%" />
+                                    </svg>
+                                {/if}
                             </div>
                         {/if}
                         <div class="svg-container">
