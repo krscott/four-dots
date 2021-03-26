@@ -42,7 +42,7 @@ const returnToTitle = () => {
         <PlayerPieces player={Player2} gameBoardState={gameBoardState}/>
     </div>
     <div class="back-button-area">
-        <button class="secondary-button emoji-font" on:click={returnToTitle}>◀</button>
+        <button class="corner-button secondary-button emoji-font" on:click={returnToTitle}>◀</button>
     </div>
     <div class="footer">
         <div class="player1-score">
@@ -64,16 +64,19 @@ const returnToTitle = () => {
 
     .grid {
         text-align: center;
-        padding: 1em;
+        /* padding: 1em; */
 
         display: grid;
         grid-template-columns: 1fr auto 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: 1fr auto 1fr;
         grid-template-areas:
+            ". . ."
             "player1     gameboard  player2"
             "backbutton  footer     .";
 
-         gap: 1em;
+        /* gap: 1em; */
+        width: 100%;
+        height: 100%;
     }
 
     .gameboard-container {
@@ -90,6 +93,7 @@ const returnToTitle = () => {
 
     .back-button-area {
         grid-area: backbutton;
+        margin: auto auto 0 0;
     }
 
     .footer {
@@ -109,18 +113,16 @@ const returnToTitle = () => {
 
     .eject {
         grid-area: eject;
+        position: relative;
+        width: 3rem;
+        height: 3rem;
+        margin: auto auto 1.5rem auto;
     }
 
     .player2-score {
         grid-area: player2;
         margin: auto;
         margin-right: 0;
-    }
-
-    button {
-        position: relative;
-        width: 3rem;
-        height: 3rem;
     }
 
     button.emoji-font span {

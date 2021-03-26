@@ -2,7 +2,8 @@ use anyhow::anyhow;
 use serde::Deserialize;
 
 use crate::{
-    ai::AiBrain, api_types::Difficulty, app_state::AppState, game_board_state::GameBoardState,
+    about_dialog_message, ai::AiBrain, api_types::Difficulty, app_state::AppState,
+    game_board_state::GameBoardState,
 };
 
 #[derive(Debug, Clone, Deserialize)]
@@ -15,6 +16,7 @@ pub enum Cmd {
     GetAiTurn,
     ClearBoard,
     ReturnToTitle,
+    ShowAbout,
 }
 
 impl Cmd {
@@ -34,6 +36,7 @@ impl Cmd {
                     Cmd::Start2P => {
                         *state = AppState::GameVsPlayer(GameBoardState::vs_p2());
                     }
+                    Cmd::ShowAbout => about_dialog_message(),
                     Cmd::PutPieceInColumn { .. }
                     | Cmd::ClearBoard
                     | Cmd::ReturnToTitle
@@ -58,6 +61,7 @@ impl Cmd {
                         }
                     }
                     Cmd::ReturnToTitle => *state = AppState::Title,
+                    Cmd::ShowAbout => about_dialog_message(),
                     Cmd::Start2P
                     | Cmd::PutPieceInColumn { .. }
                     | Cmd::ClearBoard
@@ -85,6 +89,7 @@ impl Cmd {
                     Cmd::GetAiTurn => {
                         game_board_state.take_turn_if_bot(ai);
                     }
+                    Cmd::ShowAbout => about_dialog_message(),
                     Cmd::Start1P { .. } | Cmd::Start2P => {
                         return Err(anyhow!(
                             "Unexpected command '{:?}' in state '{:?}'",
@@ -106,6 +111,7 @@ impl Cmd {
                         game_board_state.clear();
                     }
                     Cmd::ReturnToTitle => *state = AppState::Title,
+                    Cmd::ShowAbout => about_dialog_message(),
                     Cmd::Start1P { .. } | Cmd::Start2P | Cmd::GetAiTurn => {
                         return Err(anyhow!(
                             "Unexpected command '{:?}' in state '{:?}'",

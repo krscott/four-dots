@@ -9,10 +9,22 @@ mod app_state;
 mod cmd;
 mod game_board_state;
 
+use tauri::api::dialog;
 use tauri::{execute_promise, Webview};
 
 use app_state::AppState;
 use cmd::Cmd;
+
+fn about_dialog_message() {
+    dialog::message(
+        "\
+        Four Dots\n\n\
+        A Connect Four clone built with a Rust-Tauri-Svelte stack\n\n\
+        by Kris Scott\n\
+        @okayscott | github.com/krscott | okayscott.itch.io",
+        "Four Dots",
+    )
+}
 
 fn main() {
     let mut state = AppState::default();
