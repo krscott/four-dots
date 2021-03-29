@@ -4,9 +4,9 @@ import {
 } from "./apiTypes"
 
 
-export const Player1: Player = { var: PlayerPlayer1Var }
-export const Player2: Player = { var: PlayerPlayer2Var }
-export const EmptyCell: Cell = { var: CellEmptyVar }
+export const Player1: Player = Object.freeze({ var: PlayerPlayer1Var })
+export const Player2: Player = Object.freeze({ var: PlayerPlayer2Var })
+export const EmptyCell: Cell = Object.freeze({ var: CellEmptyVar })
 
 export const playerInt = (input: Cell | Player): number => {
     switch (input.var) {
