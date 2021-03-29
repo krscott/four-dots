@@ -48,7 +48,7 @@ checksum = "afddf7f520a80dbf76e6f50a35bca42a2331ef227a28b3b6dc5c2e2338d114b1"
 [[package]]
 name = "api_typer"
 version = "0.2.0"
-source = "git+https://github.com/krscott/api_typer?rev=a4e80ffee7f736563e04aad3e9f957e13431060d#a4e80ffee7f736563e04aad3e9f957e13431060d"
+source = "git+https://github.com/krscott/api_typer?rev=783a03c75d155eab4e0c9a59b890a3fa499882cc#783a03c75d155eab4e0c9a59b890a3fa499882cc"
 dependencies = [
  "log",
  "polymorphio",

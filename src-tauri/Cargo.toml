@@ -20,7 +20,7 @@ anyhow = "1.0"
 float-ord = "0.2"
 
 [build-dependencies]
-api_typer = { git = "https://github.com/krscott/api_typer", rev = "a4e80ffee7f736563e04aad3e9f957e13431060d" }
+api_typer = { git = "https://github.com/krscott/api_typer", rev = "783a03c75d155eab4e0c9a59b890a3fa499882cc" }
 serde = { version = "1.0", features = [ "derive" ] }
 serde_yaml = "0.8"
 
