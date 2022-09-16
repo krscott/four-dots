@@ -1,6 +1,11 @@
 # four-dots
 
-An implementation of Connect Four using a Rust-Tauri-Svelte stack.
+A Connect Four Clone. I built this to experiment with [Tauri](https://tauri.app/). The UI is written in [Svelte](https://svelte.dev/), and the backend in Rust.
+
+Downloadable .exe on itch: https://okayscott.itch.io/four-dots
+
+<img src="screenshots/four-dots-animation.gif" alt="Four Dots Demo" width="500"/>
+
 
 ## Running in Development
 

@@ -10,7 +10,7 @@
     "dev:svelte": "rollup -c -w",
     "dev:tauri": "tauri dev",
     "dev": "run-s build:api && run-p dev:svelte dev:tauri",
-    "start": "sirv public",
+    "start": "sirv public --no-clear",
     "validate": "svelte-check",
     "lint:js": "eslint src --ext .js,.ts,.svelte",
     "lint:rust": "cd src-tauri && cargo check",
